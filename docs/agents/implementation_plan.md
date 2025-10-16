@@ -9,7 +9,7 @@ Tasks:
 1. Verify PyTorch support on Python 3.14; if blocked, pin to Python 3.13 and document the upgrade path.
 2. Confirm TVM v0.21 build from source and tvmjs runtime bundle generation.
 3. Finalize documentation scaffolding (this plan, tech stack, requirements).
-Testing: Smoke build of TVM runtime; doc lint.
+4. Testing: Smoke build of TVM runtime; doc lint.
 
 ## Sprint 1: TVM v0.21 + tvmjs Runtime Upgrade
 Goals: Build tvmjs artifacts from TVM v0.21; ensure WebGPU device init works.
