@@ -1,4 +1,4 @@
 {
-  "externalUrl": "http://127.0.0.1:58886/ingest",
-  "logPath": "/Users/jaskarn/github/WebSD Rework/.cursor/debug.log"
+  "externalUrl": "http://127.0.0.1:33459/ingest",
+  "logPath": "/workspace/.cursor/debug.log"
 }
