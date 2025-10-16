@@ -1,2 +1,72 @@
 .cursor/debug.log
 .cursor/ndjson-ingest.json
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# macOS: Icon files
+Icon?
+._*
+
+# macOS: Spotlight
+.Spotlight-V100
+
+# macOS: Finder tags
+*.tag
+.Trashes
+
+# macOS: Cache files
+*.swp
+*.lock
+
+# macOS: Volume settings
+.VolumeIcon.icns
+
+# macOS: Temporary files
+.fseventsd
+
+# Python
+*.py[cod]
+*.pyo
+__pycache__/
+.python-version
+env/
+.venv/
+venv/
+ENV/
+env.bak/
+venv.bak/
+pip-log.txt
+pip-delete-this-directory.txt
+*.manifest
+*.spec
+
+# Python environments
+/.env
+/.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Python notebook/store
+.ipynb_checkpoints
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.npm/
+.yarn-cache/
+.yarn/
+dist/
+.tmp/
+.cache/
+.svelte-kit/
+coverage/
+*.tsbuildinfo
+
