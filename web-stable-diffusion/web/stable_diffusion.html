@@ -1,0 +1,97 @@
+<script>
+  var tvmjsGlobalEnv = tvmjsGlobalEnv || {};
+</script>
+
+<script type="module">
+  import init, { TokenizerWasm } from "./dist/tokenizers-wasm/tokenizers_wasm.js";
+
+  var initialized = false;
+  async function getTokenizer(name) {
+    if (!initialized) {
+      await init();
+    }
+    const jsonText = await (await fetch("https://huggingface.co/" + name + "/raw/main/tokenizer.json")).text();
+    return new TokenizerWasm(jsonText);
+  }
+
+  tvmjsGlobalEnv.getTokenizer = getTokenizer;
+</script>
+
+<div>
+  Select Model:   <select name="model" id="modelId">
+    <option selected="selected">Stable-Diffusion-XL</option>
+    <option>Stable-Diffusion-1.5</option>
+  </select>
+</div>
+
+<script src="dist/stable_diffusion.js"></script>
+
+<div>
+  Input prompt: <input
+  name="inputPrompt"
+  id="inputPrompt"
+  type="text"
+  value="A photo of an astronaut riding a horse on mars"
+  size="77"/> <br>
+  Negative prompt (optional): <input
+  name="negativePrompt"
+  id="negativePrompt"
+  type="text"
+  value=""
+  size="77"/>
+</div>
+
+<div>
+  Select scheduler -
+  <select name="scheduler" id="schedulerId">
+    <option value="0">Multi-step DPM Solver (20 steps)</option>
+    <option value="1">PNDM (50 steps)</option>
+    <option value="2">Euler Discrete Scheduler</option>
+  </select>
+
+  <br>
+
+  Render intermediate steps (may slow down execution) -
+  <select name="vae-cycle" id="vaeCycle">
+    <option value="-1">No</option>
+    <option value="2">Run VAE every two UNet steps after step 10</option>
+  </select>
+
+  <div id="progress">
+    <label id="gpu-tracker-label"></label><br>
+    <label id="progress-tracker-label"></label><br>
+    <progress id="progress-tracker-progress" max="100" value="100"> </progress>
+  </div>
+  <button onclick="tvmjsGlobalEnv.asyncOnGenerate()">Generate</button>
+</div>
+
+<script>
+  function updateSchedulerBasedOnModel() {
+      var selectedModel = document.getElementById('modelId').value;
+      var schedulerDropdown = document.getElementById('schedulerId');
+      
+      if (selectedModel === 'Stable-Diffusion-XL') {
+          schedulerDropdown.value = '2'; // Set to Multi-step DPM Solver
+          // Optionally, disable other options
+          for (var i = 0; i < schedulerDropdown.options.length; i++) {
+              schedulerDropdown.options[i].disabled = (schedulerDropdown.options[i].value !== '2');
+          }
+      } else {
+          schedulerDropdown.value = '0'; // Set to Multi-step DPM Solver
+          // Optionally, disable other options
+          for (var i = 0; i < schedulerDropdown.options.length; i++) {
+              schedulerDropdown.options[i].disabled = (schedulerDropdown.options[i].value !== '0' && schedulerDropdown.options[i].value !== '1');
+          }
+      }
+  }
+
+  window.onload = function() {
+      updateSchedulerBasedOnModel(); // Run when page loads
+      document.getElementById('modelId').addEventListener('change', updateSchedulerBasedOnModel); // Also run on model change
+  }
+</script>
+
+<div>
+<canvas id="canvas" width="512" height="512"></canvas>
+</div>
+<div id="log"></div>
