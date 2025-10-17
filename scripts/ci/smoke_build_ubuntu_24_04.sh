@@ -90,8 +90,17 @@ if [ "$OS_NAME" = "Darwin" ]; then
       LLVM_DIR="$BREW_LLVM16_PREFIX/lib/cmake/llvm"
       export PATH="$BREW_LLVM16_PREFIX/bin:$PATH"
       # Only append an extra space when existing flags are present to avoid trailing whitespace
-      export LDFLAGS="-L$BREW_LLVM16_PREFIX/lib${LDFLAGS:+ $LDFLAGS}"
-      export CPPFLAGS="-I$BREW_LLVM16_PREFIX/include${CPPFLAGS:+ $CPPFLAGS}"
+    # Prepend new flags and ensure a separating space if existing flags are present
+    if [ -n "${LDFLAGS:-}" ]; then
+      export LDFLAGS="-L$BREW_LLVM16_PREFIX/lib $LDFLAGS"
+    else
+      export LDFLAGS="-L$BREW_LLVM16_PREFIX/lib"
+    fi
+    if [ -n "${CPPFLAGS:-}" ]; then
+      export CPPFLAGS="-I$BREW_LLVM16_PREFIX/include $CPPFLAGS"
+    else
+      export CPPFLAGS="-I$BREW_LLVM16_PREFIX/include"
+    fi
       export PKG_CONFIG_PATH="$BREW_LLVM16_PREFIX/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
     elif [ -n "$BREW_LLVM_PREFIX" ] && [ -d "$BREW_LLVM_PREFIX" ]; then
       LLVM_CONFIG_EXECUTABLE="$BREW_LLVM_PREFIX/bin/llvm-config"
@@ -127,8 +136,28 @@ if [ "$OS_NAME" = "Darwin" ]; then
       export CMAKE_PREFIX_PATH="$LLVM_DIR${CMAKE_PREFIX_PATH:+:$CMAKE_PREFIX_PATH}"
       export LLVM_DIR
       export PATH="$BREW_LLVM_PREFIX/bin:$PATH"
-      export LDFLAGS="-L$BREW_LLVM_PREFIX/lib${LDFLAGS:+ $LDFLAGS}"
-      export CPPFLAGS="-I$BREW_LLVM_PREFIX/include${CPPFLAGS:+ $CPPFLAGS}"
+      # Prepend new flags and ensure a separating space if existing flags are present
+      if [ -n "${LDFLAGS:-}" ]; then
+        export LDFLAGS="-L$BREW_LLVM_PREFIX/lib $LDFLAGS"
+      else
+        export LDFLAGS="-L$BREW_LLVM_PREFIX/lib"
+      fi
+      if [ -n "${CPPFLAGS:-}" ]; then
+        export CPPFLAGS="-I$BREW_LLVM_PREFIX/include $CPPFLAGS"
+      else
+        export CPPFLAGS="-I$BREW_LLVM_PREFIX/include"
+      fi
+      # Prepend new flags and ensure a separating space if existing flags are present
+      if [ -n "${LDFLAGS:-}" ]; then
+        export LDFLAGS="-L$BREW_LLVM_PREFIX/lib $LDFLAGS"
+      else
+        export LDFLAGS="-L$BREW_LLVM_PREFIX/lib"
+      fi
+      if [ -n "${CPPFLAGS:-}" ]; then
+        export CPPFLAGS="-I$BREW_LLVM_PREFIX/include $CPPFLAGS"
+      else
+        export CPPFLAGS="-I$BREW_LLVM_PREFIX/include"
+      fi
       export PKG_CONFIG_PATH="$BREW_LLVM_PREFIX/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
     fi
   else
@@ -244,9 +273,15 @@ else
   export PATH="$HOME/.pyenv/bin:$HOME/.pyenv/shims:$PATH"
   eval "$(pyenv init -)" || true
   eval "$(pyenv virtualenv-init -)" || true
-  # Prefer the project virtualenv name if available
-  # Make pyenv version detection resilient: trim whitespace and match semantic version prefixes
-  if pyenv versions --bare | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | grep -E -q "(^3\.13\.0$|^3\.13$|^websd-venv-3\.13$)"; then
+  # Prefer the project virtualenv name if available.
+  # Make pyenv version detection resilient: trim whitespace and match exact version or virtualenv names.
+  PYENV_VERSIONS_LIST="$(pyenv versions --bare 2>/dev/null | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+  # If the virtualenv already exists, just activate it. Otherwise, if base Python 3.13 is present,
+  # create the virtualenv and activate it.
+  if printf '%s\n' "$PYENV_VERSIONS_LIST" | grep -qx "websd-venv-3.13"; then
+    pyenv activate websd-venv-3.13 || true
+    export PYENV_VERSION="websd-venv-3.13"
+  elif printf '%s\n' "$PYENV_VERSIONS_LIST" | grep -qx "3.13.0" || printf '%s\n' "$PYENV_VERSIONS_LIST" | grep -qx "3.13"; then
     pyenv virtualenv -f 3.13.0 websd-venv-3.13 || true
     pyenv activate websd-venv-3.13 || true
     export PYENV_VERSION="websd-venv-3.13"
