@@ -64,3 +64,18 @@ Full-build attempt (macOS, 2025-10-17):
   3. After the native TVM build completes, re-run `pip install -e tvm/python` (the script attempts this automatically) and then re-run `web-stable-diffusion/build.py`.
 
 If you want I can apply the LLVM PATH fix and continue the TVM build here (note: it may take a long time). Otherwise I can provide the exact commands for you to run locally.
+
+---
+
+Latest build failure notes (2025-10-17):
+
+- After exporting `LLVM_DIR`/`CMAKE_PREFIX_PATH` so CMake can find Homebrew LLVM, the TVM configure step progressed further but failed while building the `libbacktrace` external project.
+- Root cause diagnosis: the build logs show `configure: error: unsafe srcdir value: '/Users/jaskarn/github/WebSD Rework/tvm/ffi/cmake/Utils/../../../3rdparty/libbacktrace'`. This failure is caused by the repository path containing a space (`WebSD Rework`), which breaks autotools/configure handling of source/build paths. Many native build tools (autoconf/automake/configure) do not support spaces in paths and will fail with similar errors.
+
+- Remediation options:
+  1. Re-clone the repository into a path with no spaces (recommended). Example: `~/github/WebSD_Rework` or `/Users/jaskarn/github/WebSD_Rework` and re-run the smoke script.
+  2. Create a symlink without spaces pointing to the current folder and run the build from the symlink (quick workaround):
+     - `ln -s "$PWD" ~/WebSD_Rework_build && cd ~/WebSD_Rework_build && bash /path/to/scripts/ci/smoke_build_ubuntu_24_04.sh`
+  3. Attempt to patch build scripts to escape paths (fragile) — not recommended.
+
+I can re-clone the repo into a no-space path and re-run the full TVM build here. Shall I proceed with re-cloning to `/Users/jaskarn/github/WebSD_Rework` and continuing the build?

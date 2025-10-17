@@ -18,6 +18,16 @@ echo "Starting Web Stable Diffusion smoke build"
 # Provide a macOS (Darwin) fallback using Homebrew or nvm when available.
 OS_NAME=$(uname)
 
+# Determine parallel build job count in a cross-platform way
+if command -v nproc >/dev/null 2>&1; then
+  NPROC=$(nproc)
+elif [ "$OS_NAME" = "Darwin" ]; then
+  NPROC=$(sysctl -n hw.ncpu 2>/dev/null || echo 2)
+else
+  NPROC=2
+fi
+
+
 # Prefer a brewed llvm-config on macOS if available so CMake can find LLVM
 if [ "$OS_NAME" = "Darwin" ]; then
   if command -v brew >/dev/null 2>&1 && [ -d "$(brew --prefix llvm 2>/dev/null)" ]; then
@@ -38,7 +48,21 @@ if [ "$OS_NAME" = "Darwin" ]; then
   echo "Detected macOS; attempting Homebrew-based package installs where possible"
   if command -v brew >/dev/null 2>&1; then
     brew update || true
-    brew install git cmake ninja pkg-config python@3 curl wget unzip openssl bzip2 readline sqlite3 xz zlib libffi || true
+    # Ensure core build tooling is present on macOS
+    brew install git cmake ninja pkg-config python@3 curl wget unzip openssl bzip2 readline sqlite3 xz zlib libffi llvm || true
+    # Homebrew's LLVM is keg-only; help tools find it
+    BREW_LLVM_PREFIX=$(brew --prefix llvm 2>/dev/null || echo "")
+    if [ -n "$BREW_LLVM_PREFIX" ]; then
+      LLVM_CONFIG_EXECUTABLE="$BREW_LLVM_PREFIX/bin/llvm-config"
+      LLVM_DIR="$BREW_LLVM_PREFIX/lib/cmake/llvm"
+      : "${CMAKE_PREFIX_PATH:=}"
+      export CMAKE_PREFIX_PATH="$LLVM_DIR${CMAKE_PREFIX_PATH:+:$CMAKE_PREFIX_PATH}"
+      export LLVM_DIR
+      export PATH="$BREW_LLVM_PREFIX/bin:$PATH"
+      export LDFLAGS="-L$BREW_LLVM_PREFIX/lib ${LDFLAGS:-}" 
+      export CPPFLAGS="-I$BREW_LLVM_PREFIX/include ${CPPFLAGS:-}"
+      export PKG_CONFIG_PATH="$BREW_LLVM_PREFIX/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
+    fi
   else
     echo "Homebrew not found. For macOS please install Homebrew or ensure required packages are present."
   fi
@@ -112,6 +136,14 @@ else
   echo "emsdk already present at $HOME/emsdk"
   # shellcheck source=/dev/null
   source "$HOME/emsdk/emsdk_env.sh" || true
+fi
+
+# Ensure EMSDK env variables are exported on macOS too (Homebrew installs may differ)
+if [ "$OS_NAME" = "Darwin" ]; then
+  if [ -f "$HOME/emsdk/emsdk_env.sh" ]; then
+    # shellcheck source=/dev/null
+    source "$HOME/emsdk/emsdk_env.sh" || true
+  fi
 fi
 
 # Install pyenv (but skip heavy Python builds unless explicitly requested)
@@ -201,7 +233,7 @@ fi
 CONFIG_OK=0
 cmake -S .. -B . -G Ninja \
   -DUSE_LLVM=ON \
-  -DLLVM_CONFIG_EXECUTABLE=$(which llvm-config || echo /usr/bin/llvm-config-16) \
+  -DLLVM_CONFIG_EXECUTABLE=${LLVM_CONFIG_EXECUTABLE:-$(which llvm-config || echo /usr/bin/llvm-config-16)} \
   -DUSE_RPC=OFF \
   -DUSE_CUDA=OFF \
   -DUSE_METAL=OFF \
@@ -226,7 +258,7 @@ fi
 
 # Building TVM from source can be very long; allow skipping with FORCE_TVM_BUILD=1 environment variable.
 if [ "${FORCE_TVM_BUILD:-0}" -eq 1 ]; then
-  cmake --build . -j"$(nproc)" || true
+  cmake --build . -j"${NPROC}" || true
 else
   echo "Skipping TVM full build (set FORCE_TVM_BUILD=1 to enable). CMake configure step completed."
 fi
