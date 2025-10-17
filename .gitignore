@@ -70,3 +70,9 @@ dist/
 coverage/
 *.tsbuildinfo
 
+# Smoke build artifacts
+/var/log/websd_build/
+/.emsdk/
+emsdk/
+tvm/build/
+web-stable-diffusion/dist/
