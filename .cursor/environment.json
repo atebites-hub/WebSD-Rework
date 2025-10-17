@@ -1,7 +1,5 @@
 {
   "terminals": [],
-  "install": "chmod +x ./scripts/*.sh && ./scripts/agent_install.sh",
-  "start": "chmod +x ./scripts/*.sh && ./scripts/agent_start.sh",
   "build": {
     "context": ".",
     "dockerfile": "Dockerfile"
