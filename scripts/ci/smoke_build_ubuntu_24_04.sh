@@ -163,6 +163,29 @@ elif ! command -v pyenv >/dev/null 2>&1; then
   fi
 fi
 
+# Prefer a repository-local virtualenv (.venv) for deterministic Python deps.
+# If not present, ensure pyenv shims/virtualenv are available and activate the project venv.
+if [ -f ".venv/bin/activate" ]; then
+  echo "Activating repository .venv"
+  # shellcheck source=/dev/null
+  . .venv/bin/activate
+  PYTHON_BIN="$(pwd)/.venv/bin/python"
+  export PYTHON_BIN
+else
+  # Ensure pyenv shims are on PATH and pyenv is initialized
+  export PATH="$HOME/.pyenv/bin:$HOME/.pyenv/shims:$PATH"
+  eval "$(pyenv init -)" || true
+  eval "$(pyenv virtualenv-init -)" || true
+  # Prefer the project virtualenv name if available
+  if pyenv versions --bare | grep -qx "^3.13.0$" || pyenv versions --bare | grep -qx "^websd-venv-3.13$"; then
+    pyenv virtualenv -f 3.13.0 websd-venv-3.13 || true
+    pyenv activate websd-venv-3.13 || true
+    export PYENV_VERSION="websd-venv-3.13"
+  fi
+  PYTHON_BIN="$(command -v python 2>/dev/null || command -v python3 2>/dev/null || echo python)"
+  export PYTHON_BIN
+fi
+
 # By default we avoid building Python from source in CI (use FORCE_PYENV_INSTALL=1 to enable).
 if [ "${FORCE_PYENV_INSTALL:-0}" -eq 1 ]; then
   if ! pyenv versions --bare | grep -qx "^3.13.0$"; then
