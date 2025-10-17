@@ -1,0 +1,60 @@
+name: Build tvmjs Artifacts
+
+on:
+  pull_request:
+    branches:
+      - sprint-1-tasks
+
+permissions:
+  contents: read
+
+jobs:
+  build-tvmjs:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: web-stable-diffusion/3rdparty/tvm/web
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: web-stable-diffusion/3rdparty/tvm/web/package-lock.json
+
+      - name: Setup Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 3.1.45
+
+      - name: Verify toolchain
+        run: |
+          emcc -v
+          node -v
+          python3 -V
+
+      - name: Install JS deps
+        run: npm ci
+
+      - name: Build wasm runtime (emscripten)
+        run: make -j2
+
+      - name: Build JS bundle (rollup)
+        run: npm run bundle
+
+      - name: Verify outputs exist
+        run: |
+          test -f dist/wasm/tvmjs_runtime.wasm
+          test -f dist/wasm/tvmjs_runtime.wasi.js
+          test -f dist/tvmjs.bundle.js
+          ls -lh dist dist/wasm || true
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: tvmjs-artifacts
+          path: |
+            web-stable-diffusion/3rdparty/tvm/web/dist/**
