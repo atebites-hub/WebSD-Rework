@@ -46,3 +46,28 @@ A comprehensive refactor of the Web Stable Diffusion demo to target Apache TVM v
 
 ## License
 MIT
+
+## Smoke build (end-to-end)
+
+Run the smoke build script to configure and (optionally) compile TVM, build web artifacts, and run a short smoke deploy.
+
+Basic usage:
+
+```bash
+./scripts/ci/smoke_build_ubuntu_24_04.sh
+```
+
+Common environment flags:
+
+- `FORCE_TVM_BUILD=1` — enable full TVM compilation (long-running)
+- `FORCE_PYENV_INSTALL=1` — build Python via pyenv (optional)
+- `SKIP_SITE=1` or `--skip-site` — skip site build/deploy steps
+- `SMOKE_ENV=macos|ubuntu|docker` — optional environment preset
+
+Example (macOS, full build):
+
+```bash
+SMOKE_ENV=macos FORCE_PYENV_INSTALL=1 FORCE_TVM_BUILD=1 ./scripts/ci/smoke_build_ubuntu_24_04.sh
+```
+
+The script prefers a repository `.venv` if present and will attempt to activate it; otherwise it will use pyenv-managed Python. On macOS the script prefers `llvm@16` when available and will attempt to use it for CMake.
