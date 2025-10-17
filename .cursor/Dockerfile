@@ -53,14 +53,15 @@ WORKDIR /workspace
 # Install pipx / upgrade pip
 RUN python3 -m pip install --upgrade pip setuptools wheel pipx && pipx ensurepath
 
-# Copy project requirements for layer caching
-COPY web-stable-diffusion/requirements.txt /tmp/requirements.txt
-COPY web-stable-diffusion/setup.py /tmp/setup.py
+# Install/upgrade pip tools and ensure venv support
+RUN python3 -m pip install --upgrade pip setuptools wheel pipx && pipx ensurepath
 
-# Install Python deps (use --no-cache-dir to keep image small)
-RUN if [ -s /tmp/requirements.txt ]; then python3 -m pip install --no-cache-dir -r /tmp/requirements.txt ; fi \
-    && if [ -f /tmp/setup.py ]; then python3 -m pip install --no-cache-dir /tmp ; fi \
-    && rm -f /tmp/requirements.txt /tmp/setup.py
+# Install Python deps from project path (no /tmp copy). This uses the files
+# at build-time from the repository working directory.
+COPY web-stable-diffusion/requirements.txt web-stable-diffusion/setup.py ./
+RUN if [ -s ./web-stable-diffusion/requirements.txt ]; then python3 -m pip install --no-cache-dir -r ./web-stable-diffusion/requirements.txt; fi \
+    && if [ -f ./web-stable-diffusion/setup.py ]; then python3 -m pip install --no-cache-dir ./web-stable-diffusion; fi \
+    && rm -f ./web-stable-diffusion/requirements.txt ./web-stable-diffusion/setup.py
 
 # Install emsdk (lightweight enlistment without full toolchain by default)
 # Users can run `/workspace/emsdk_install.sh` inside container to install full emsdk

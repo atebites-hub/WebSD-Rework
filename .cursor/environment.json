@@ -1,9 +1,9 @@
 {
-  "build": {
-    "dockerfile": "Dockerfile",
-    "context": "."
-  },
   "terminals": [],
-  "install": "./scripts/agent_install.sh",
-  "start": "./scripts/agent_start.sh"
+  "install": "chmod +x ./scripts/*.sh && ./scripts/agent_install.sh",
+  "start": "chmod +x ./scripts/*.sh && ./scripts/agent_start.sh",
+  "build": {
+    "context": ".",
+    "dockerfile": "Dockerfile"
+  }
 }
