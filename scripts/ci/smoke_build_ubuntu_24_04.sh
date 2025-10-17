@@ -24,7 +24,8 @@ if [ "$OS_NAME" = "Darwin" ]; then
     LLVM_CONFIG_EXECUTABLE="$(brew --prefix llvm)/bin/llvm-config"
     # Help CMake locate Homebrew's keg-only LLVM CMake files
     LLVM_DIR="$(brew --prefix llvm)/lib/cmake/llvm"
-    export CMAKE_PREFIX_PATH="$LLVM_DIR:$CMAKE_PREFIX_PATH"
+    : "${CMAKE_PREFIX_PATH:=}"
+    export CMAKE_PREFIX_PATH="$LLVM_DIR${CMAKE_PREFIX_PATH:+:$CMAKE_PREFIX_PATH}"
     export LLVM_DIR
   else
     LLVM_CONFIG_EXECUTABLE="$(which llvm-config 2>/dev/null || echo /opt/homebrew/opt/llvm/bin/llvm-config)"
