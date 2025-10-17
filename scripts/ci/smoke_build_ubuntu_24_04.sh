@@ -18,6 +18,16 @@ echo "Starting Web Stable Diffusion smoke build"
 # Provide a macOS (Darwin) fallback using Homebrew or nvm when available.
 OS_NAME=$(uname)
 
+# Prefer repository-local .venv if present and set PYTHON_BIN early so later steps use it
+if [ -f ".venv/bin/activate" ]; then
+  echo "Found .venv; activating early"
+  # shellcheck source=/dev/null
+  . .venv/bin/activate
+  PYTHON_BIN="$(pwd)/.venv/bin/python"
+  export PYTHON_BIN
+  export PATH="$(pwd)/.venv/bin:$PATH"
+fi
+
 # Determine parallel build job count in a cross-platform way
 if command -v nproc >/dev/null 2>&1; then
   NPROC=$(nproc)
@@ -30,15 +40,31 @@ fi
 
 # Prefer a brewed llvm-config on macOS if available so CMake can find LLVM
 if [ "$OS_NAME" = "Darwin" ]; then
-  if command -v brew >/dev/null 2>&1 && [ -d "$(brew --prefix llvm 2>/dev/null)" ]; then
-    LLVM_CONFIG_EXECUTABLE="$(brew --prefix llvm)/bin/llvm-config"
-    # Help CMake locate Homebrew's keg-only LLVM CMake files
-    LLVM_DIR="$(brew --prefix llvm)/lib/cmake/llvm"
+  if command -v brew >/dev/null 2>&1; then
+    # Prefer llvm@16 if installed (Homebrew keeps multiple llvm versions)
+    BREW_LLVM16_PREFIX="$(brew --prefix llvm@16 2>/dev/null || true)"
+    BREW_LLVM_PREFIX="$(brew --prefix llvm 2>/dev/null || true)"
+    if [ -n "$BREW_LLVM16_PREFIX" ] && [ -d "$BREW_LLVM16_PREFIX" ]; then
+      LLVM_CONFIG_EXECUTABLE="$BREW_LLVM16_PREFIX/bin/llvm-config"
+      LLVM_DIR="$BREW_LLVM16_PREFIX/lib/cmake/llvm"
+      export PATH="$BREW_LLVM16_PREFIX/bin:$PATH"
+      export LDFLAGS="-L$BREW_LLVM16_PREFIX/lib ${LDFLAGS:-}"
+      export CPPFLAGS="-I$BREW_LLVM16_PREFIX/include ${CPPFLAGS:-}"
+      export PKG_CONFIG_PATH="$BREW_LLVM16_PREFIX/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
+    elif [ -n "$BREW_LLVM_PREFIX" ] && [ -d "$BREW_LLVM_PREFIX" ]; then
+      LLVM_CONFIG_EXECUTABLE="$BREW_LLVM_PREFIX/bin/llvm-config"
+      LLVM_DIR="$BREW_LLVM_PREFIX/lib/cmake/llvm"
+      export PATH="$BREW_LLVM_PREFIX/bin:$PATH"
+    else
+      LLVM_CONFIG_EXECUTABLE="$(which llvm-config 2>/dev/null || echo /opt/homebrew/opt/llvm/bin/llvm-config)"
+    fi
     : "${CMAKE_PREFIX_PATH:=}"
-    export CMAKE_PREFIX_PATH="$LLVM_DIR${CMAKE_PREFIX_PATH:+:$CMAKE_PREFIX_PATH}"
+    if [ -n "$LLVM_DIR" ]; then
+      export CMAKE_PREFIX_PATH="$LLVM_DIR${CMAKE_PREFIX_PATH:+:$CMAKE_PREFIX_PATH}"
+    fi
     export LLVM_DIR
   else
-    LLVM_CONFIG_EXECUTABLE="$(which llvm-config 2>/dev/null || echo /opt/homebrew/opt/llvm/bin/llvm-config)"
+    LLVM_CONFIG_EXECUTABLE="$(which llvm-config 2>/dev/null || echo /usr/bin/llvm-config-16)"
   fi
 else
   LLVM_CONFIG_EXECUTABLE="$(which llvm-config || echo /usr/bin/llvm-config-16)"
@@ -287,6 +313,13 @@ fi
 
 # Building TVM from source can be very long; allow skipping with FORCE_TVM_BUILD=1 environment variable.
 if [ "${FORCE_TVM_BUILD:-0}" -eq 1 ]; then
+  # Ensure CMake/Build use the selected llvm-config and the repository .venv python
+  export LLVM_CONFIG_EXECUTABLE="${LLVM_CONFIG_EXECUTABLE:-$(which llvm-config || echo /usr/bin/llvm-config-16)}"
+  export CMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH:-}"
+  # Use repository .venv python if available
+  if [ -f "$(pwd)/.venv/bin/python" ]; then
+    export PYTHON_BIN="$(pwd)/.venv/bin/python"
+  fi
   cmake --build . -j"${NPROC}" || true
 else
   echo "Skipping TVM full build (set FORCE_TVM_BUILD=1 to enable). CMake configure step completed."
