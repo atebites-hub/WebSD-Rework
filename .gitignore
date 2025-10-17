@@ -80,3 +80,5 @@ logs/
 logs/*
 # Third-party native TVM clone (detached)
 web-stable-diffusion/3rdparty/tvm/
+.cursor/smoke_build_pid.txt
+tvm
