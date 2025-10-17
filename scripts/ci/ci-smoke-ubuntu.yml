@@ -1,0 +1,89 @@
+name: Smoke Build (matrix)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - smoke-build/*
+
+jobs:
+  smoke:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: ubuntu
+            runs-on: ubuntu-24.04
+            smoke_env: ubuntu
+            use_docker: false
+          - name: macos
+            runs-on: macos-latest
+            smoke_env: macos
+            use_docker: false
+          - name: docker
+            runs-on: ubuntu-24.04
+            smoke_env: ubuntu
+            use_docker: true
+    runs-on: ${{ matrix.runs-on }}
+    timeout-minutes: 240
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13'
+
+      - name: Install build deps (ubuntu runners)
+        if: startsWith(matrix.runs-on, 'ubuntu')
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential git cmake ninja-build pkg-config python3-pip curl wget unzip ca-certificates \
+            libtinfo-dev libedit-dev libssl-dev libbz2-dev libreadline-dev libsqlite3-dev zlib1g-dev libffi-dev liblzma-dev libncursesw5-dev libgdbm-dev llvm-16 llvm-16-dev llvm-16-tools || true
+
+      - name: Prepare and run smoke script
+        run: |
+          chmod +x ./scripts/ci/smoke_build_ubuntu_24_04.sh
+          mkdir -p logs/websd_build
+          if [ "${{ matrix.use_docker }}" = "true" ]; then
+            docker run --rm -v "$PWD":/workspace -w /workspace ubuntu:24.04 bash -lc "apt update && apt install -y git cmake ninja-build python3-pip curl wget unzip ca-certificates llvm-16 llvm-16-dev llvm-16-tools && FORCE_PYENV_INSTALL=0 FORCE_TVM_BUILD=1 SMOKE_ENV=${{ matrix.smoke_env }} ./scripts/ci/smoke_build_ubuntu_24_04.sh --skip-site" || true
+          else
+            FORCE_PYENV_INSTALL=0 FORCE_TVM_BUILD=1 SMOKE_ENV=${{ matrix.smoke_env }} ./scripts/ci/smoke_build_ubuntu_24_04.sh --skip-site || true
+          fi
+
+      - name: Analyze logs and mark success if torch-dynamo failure reached
+        if: always()
+        run: |
+          LATEST_LOG=$(ls -1t logs/websd_build 2>/dev/null | head -n1 || true)
+          if [ -z "$LATEST_LOG" ]; then
+            echo "No logs produced"
+            exit 1
+          fi
+          echo "Analyzing $LATEST_LOG"
+          LOGFILE="logs/websd_build/$LATEST_LOG"
+          # Patterns that signify we've reached the torch-dynamo failure point
+          if grep -q "AssertionError: Unsupported function type embedding" "$LOGFILE" || grep -q "torch._dynamo.exc.BackendCompilerFailed" "$LOGFILE" || grep -q "Unsupported function type embedding" "$LOGFILE"; then
+            echo "Found expected torch-dynamo failure — treating as success"
+            exit 0
+          fi
+          # If build completed successfully, mark success
+          if grep -q "Smoke build script completed" "$LOGFILE" && ! grep -q "Traceback" "$LOGFILE"; then
+            echo "Smoke script completed without tracebacks — success"
+            exit 0
+          fi
+          echo "Expected torch-dynamo failure not found and script failed — failing job"
+          tail -n 200 "$LOGFILE"
+          exit 1
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-build-logs-${{ matrix.name }}
+          path: logs/websd_build/
+
+

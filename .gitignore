@@ -70,3 +70,19 @@ dist/
 coverage/
 *.tsbuildinfo
 
+# Smoke build artifacts
+/var/log/websd_build/
+/.emsdk/
+emsdk/
+tvm/build/
+web-stable-diffusion/dist/
+logs/
+logs/*
+# Third-party native TVM clone (detached)
+web-stable-diffusion/3rdparty/tvm/
+.cursor/smoke_build_pid.txt
+tvm
+tvm/
+tvm/*
+.cursor/smoke_build_pid.txt
+site
