@@ -27,7 +27,7 @@ RUN git clone https://github.com/emscripten-core/emsdk.git /opt/emsdk && \
     /opt/emsdk/emsdk activate latest && \
     echo "source /opt/emsdk/emsdk_env.sh" >> /etc/profile.d/emsdk.sh
 
-ENV PATH="/opt/emsdk:/opt/emsdk/node/${PATH}:/opt/emsdk/llvm/bin:${PATH}"
+ENV PATH="/opt/emsdk:/opt/emsdk/node/bin:/opt/emsdk/llvm/bin:${PATH}"
 
 # Build TVM v0.21
 # We will clone the v0.21 tag and perform an out-of-source build with CMake
