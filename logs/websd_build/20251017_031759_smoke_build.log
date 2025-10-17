@@ -1,0 +1,251 @@
++ echo 'Starting Web Stable Diffusion smoke build'
+Starting Web Stable Diffusion smoke build
++ command -v sudo
++ sudo -n true
++ sudo apt update
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Ign:1 https://apt.llvm.org/plucky llvm-toolchain-plucky-16 InRelease
+Err:2 https://apt.llvm.org/plucky llvm-toolchain-plucky-16 Release
+  404  Not Found [IP: 199.232.198.49 443]
+Hit:3 http://archive.ubuntu.com/ubuntu plucky InRelease
+Hit:4 http://security.ubuntu.com/ubuntu plucky-security InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu plucky-updates InRelease
+Hit:6 http://archive.ubuntu.com/ubuntu plucky-backports InRelease
+Reading package lists...
+Error: The repository 'http://apt.llvm.org/plucky llvm-toolchain-plucky-16 Release' does not have a Release file.
++ set +e
++ sudo apt install -y build-essential git cmake ninja-build pkg-config python3-pip curl wget unzip ca-certificates libtinfo-dev libedit-dev libssl-dev libbz2-dev libreadline-dev libsqlite3-dev zlib1g-dev libffi-dev liblzma-dev libncursesw5-dev libgdbm-dev llvm-16 llvm-16-dev llvm-16-tools
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Error: Unable to locate package llvm-16
+Error: Unable to locate package llvm-16-dev
+Error: Unable to locate package llvm-16-tools
++ INSTALL_EXIT=100
++ set -e
++ '[' 100 -ne 0 ']'
++ echo 'llvm-16 packages not found via apt; attempting to add LLVM apt repo and retry'
+llvm-16 packages not found via apt; attempting to add LLVM apt repo and retry
++ sudo apt install -y gnupg ca-certificates lsb-release
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+gnupg is already the newest version (2.4.4-2ubuntu23.1).
+ca-certificates is already the newest version (20241223).
+lsb-release is already the newest version (12.1-1).
+Summary:
+  Upgrading: 0, Installing: 0, Removing: 0, Not Upgrading: 0
+++ lsb_release -sc
++ CODENAME=plucky
++ sudo mkdir -p /etc/apt/keyrings
++ wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key
++ sudo gpg --dearmor -o /etc/apt/keyrings/llvm-archive-keyring.gpg
+gpg: cannot open '/dev/tty': No such device or address
++ true
++ sudo tee /etc/apt/sources.list.d/llvm.list
++ echo 'deb [signed-by=/etc/apt/keyrings/llvm-archive-keyring.gpg] http://apt.llvm.org/plucky/ llvm-toolchain-plucky-16 main'
+deb [signed-by=/etc/apt/keyrings/llvm-archive-keyring.gpg] http://apt.llvm.org/plucky/ llvm-toolchain-plucky-16 main
++ sudo apt update
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Hit:2 http://security.ubuntu.com/ubuntu plucky-security InRelease
+Ign:1 https://apt.llvm.org/plucky llvm-toolchain-plucky-16 InRelease
+Err:3 https://apt.llvm.org/plucky llvm-toolchain-plucky-16 Release
+  404  Not Found [IP: 199.232.194.49 443]
+Hit:4 http://archive.ubuntu.com/ubuntu plucky InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu plucky-updates InRelease
+Hit:6 http://archive.ubuntu.com/ubuntu plucky-backports InRelease
+Reading package lists...
+Error: The repository 'http://apt.llvm.org/plucky llvm-toolchain-plucky-16 Release' does not have a Release file.
++ true
++ sudo apt install -y llvm-16 llvm-16-dev llvm-16-tools
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Error: Unable to locate package llvm-16
+Error: Unable to locate package llvm-16-dev
+Error: Unable to locate package llvm-16-tools
++ echo 'Failed to install llvm-16 from the LLVM apt repo; falling back to distro llvm/clang packages'
+Failed to install llvm-16 from the LLVM apt repo; falling back to distro llvm/clang packages
++ sudo apt install -y llvm clang
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+llvm is already the newest version (1:20.0-63ubuntu1).
+clang is already the newest version (1:20.0-63ubuntu1).
+Summary:
+  Upgrading: 0, Installing: 0, Removing: 0, Not Upgrading: 0
++ command -v sudo
++ sudo -n true
++ sudo apt install -y libbz2-dev libssl-dev libreadline-dev libsqlite3-dev zlib1g-dev libffi-dev liblzma-dev libncursesw5-dev tk-dev
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+libbz2-dev is already the newest version (1.0.8-6).
+libssl-dev is already the newest version (3.4.1-1ubuntu4).
+libreadline-dev is already the newest version (8.2-6).
+libsqlite3-dev is already the newest version (3.46.1-3ubuntu0.3).
+zlib1g-dev is already the newest version (1:1.3.dfsg+really1.3.1-1ubuntu1).
+libffi-dev is already the newest version (3.4.7-1).
+liblzma-dev is already the newest version (5.6.4-1ubuntu1).
+libncurses-dev is already the newest version (6.5+20250216-2).
+tk-dev is already the newest version (8.6.14build1).
+Summary:
+  Upgrading: 0, Installing: 0, Removing: 0, Not Upgrading: 0
++ curl -fsSL https://deb.nodesource.com/setup_18.x
++ sudo -E bash -
+[38;5;79m2025-10-17 03:18:04 - Installing pre-requisites[0m
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Ign:1 https://apt.llvm.org/plucky llvm-toolchain-plucky-16 InRelease
+Hit:2 http://security.ubuntu.com/ubuntu plucky-security InRelease
+Err:3 https://apt.llvm.org/plucky llvm-toolchain-plucky-16 Release
+  404  Not Found [IP: 199.232.194.49 443]
+Hit:4 http://archive.ubuntu.com/ubuntu plucky InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu plucky-updates InRelease
+Hit:6 http://archive.ubuntu.com/ubuntu plucky-backports InRelease
+Reading package lists...
+Error: The repository 'http://apt.llvm.org/plucky llvm-toolchain-plucky-16 Release' does not have a Release file.
+[1;31m2025-10-17 03:18:05 - Error: Failed to run 'apt update' (Exit Code: 0)[0m
++ sudo apt install -y nodejs
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+nodejs is already the newest version (20.18.1+dfsg-1ubuntu2).
+Summary:
+  Upgrading: 0, Installing: 0, Removing: 0, Not Upgrading: 0
++ '[' '!' -d /home/ubuntu/emsdk ']'
++ echo 'emsdk already present at /home/ubuntu/emsdk'
+emsdk already present at /home/ubuntu/emsdk
++ source /home/ubuntu/emsdk/emsdk_env.sh
+++ CURRENT_SCRIPT=
+++ DIR=.
+++ '[' -n /home/ubuntu/emsdk/emsdk_env.sh ']'
+++ CURRENT_SCRIPT=/home/ubuntu/emsdk/emsdk_env.sh
+++ '[' -n /home/ubuntu/emsdk/emsdk_env.sh ']'
++++ dirname /home/ubuntu/emsdk/emsdk_env.sh
+++ DIR=/home/ubuntu/emsdk
+++ '[' -h /home/ubuntu/emsdk/emsdk_env.sh ']'
+++ unset CURRENT_SCRIPT
+++ '[' '!' -f /home/ubuntu/emsdk/emsdk.py ']'
++++ EMSDK_BASH=1
++++ /home/ubuntu/emsdk/emsdk construct_env
+Setting up EMSDK environment (suppress these messages with EMSDK_QUIET=1)
+Adding directories to PATH:
+PATH += /home/ubuntu/emsdk
+PATH += /home/ubuntu/emsdk/upstream/emscripten
+
+Setting environment variables:
+PATH = /home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+EMSDK = /home/ubuntu/emsdk
+EMSDK_NODE = /home/ubuntu/emsdk/node/22.16.0_64bit/bin/node
+++ eval export 'PATH="/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";' export 'EMSDK="/home/ubuntu/emsdk";' export 'EMSDK_NODE="/home/ubuntu/emsdk/node/22.16.0_64bit/bin/node";'
++++ export PATH=/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export EMSDK=/home/ubuntu/emsdk
++++ EMSDK=/home/ubuntu/emsdk
++++ export EMSDK_NODE=/home/ubuntu/emsdk/node/22.16.0_64bit/bin/node
++++ EMSDK_NODE=/home/ubuntu/emsdk/node/22.16.0_64bit/bin/node
+++ unset DIR
++ '[' -d /home/ubuntu/.pyenv ']'
++ echo 'pyenv directory exists at /home/ubuntu/.pyenv; initializing without re-running installer'
+pyenv directory exists at /home/ubuntu/.pyenv; initializing without re-running installer
++ export PATH=/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++ PATH=/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ pyenv init -
++ eval 'PATH="$(bash --norc -ec '\''IFS=:; paths=($PATH); 
+for i in ${!paths[@]}; do 
+if [[ ${paths[i]} == "'\'''\''/home/ubuntu/.pyenv/shims'\'''\''" ]]; then unset '\''\'\'''\''paths[i]'\''\'\'''\''; 
+fi; done; 
+echo "${paths[*]}"'\'')"
+export PATH="/home/ubuntu/.pyenv/shims:${PATH}"
+export PYENV_SHELL=bash
+source '\''/home/ubuntu/.pyenv/completions/pyenv.bash'\''
+command pyenv rehash 2>/dev/null
+pyenv() {
+  local command=${1:-}
+  [ "$#" -gt 0 ] && shift
+  case "$command" in
+  activate|deactivate|rehash|shell)
+    eval "$(pyenv "sh-$command" "$@")"
+    ;;
+  *)
+    command pyenv "$command" "$@"
+    ;;
+  esac
+}'
++++ bash --norc -ec 'IFS=:; paths=($PATH); 
+for i in ${!paths[@]}; do 
+if [[ ${paths[i]} == "/home/ubuntu/.pyenv/shims" ]]; then unset '\''paths[i]'\''; 
+fi; done; 
+echo "${paths[*]}"'
+++ PATH=/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export PATH=/home/ubuntu/.pyenv/shims:/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/home/ubuntu/.pyenv/shims:/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export PYENV_SHELL=bash
+++ PYENV_SHELL=bash
+++ source /home/ubuntu/.pyenv/completions/pyenv.bash
++++ complete -F _pyenv pyenv
+++ command pyenv rehash
+++ pyenv virtualenv-init -
+++ local command=virtualenv-init
+++ '[' 2 -gt 0 ']'
+++ shift
+++ case "$command" in
+++ command pyenv virtualenv-init -
++ eval 'export PATH="/home/ubuntu/.pyenv/plugins/pyenv-virtualenv/shims:${PATH}";
+export PYENV_VIRTUALENV_INIT=1;
+_pyenv_virtualenv_hook() {
+  local ret=$?
+  if [ -n "${VIRTUAL_ENV-}" ]; then
+    eval "$(pyenv sh-activate --quiet || pyenv sh-deactivate --quiet || true)" || true
+  else
+    eval "$(pyenv sh-activate --quiet || true)" || true
+  fi
+  return $ret
+};
+if ! [[ "${PROMPT_COMMAND-}" =~ _pyenv_virtualenv_hook ]]; then
+  PROMPT_COMMAND="_pyenv_virtualenv_hook;${PROMPT_COMMAND-}"
+fi'
+++ export PATH=/home/ubuntu/.pyenv/plugins/pyenv-virtualenv/shims:/home/ubuntu/.pyenv/shims:/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/home/ubuntu/.pyenv/plugins/pyenv-virtualenv/shims:/home/ubuntu/.pyenv/shims:/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export PYENV_VIRTUALENV_INIT=1
+++ PYENV_VIRTUALENV_INIT=1
+++ [[ '' =~ _pyenv_virtualenv_hook ]]
+++ PROMPT_COMMAND='_pyenv_virtualenv_hook;'
++ '[' 0 -eq 1 ']'
++ pyenv versions --bare
++ local command=versions
++ grep -qx '^3.13.0$'
++ '[' 2 -gt 0 ']'
++ shift
++ case "$command" in
++ command pyenv versions --bare
++ echo 'Note: Python 3.13.0 not installed in pyenv; skipping virtualenv creation.'
+Note: Python 3.13.0 not installed in pyenv; skipping virtualenv creation.
++ echo 'If you need pyenv-built Python, re-run with FORCE_PYENV_INSTALL=1 and ensure build dependencies are present.'
+If you need pyenv-built Python, re-run with FORCE_PYENV_INSTALL=1 and ensure build dependencies are present.
++ python -m pip install --upgrade pip setuptools wheel
+scripts/ci/smoke_build_ubuntu_24_04.sh: line 104: python: command not found

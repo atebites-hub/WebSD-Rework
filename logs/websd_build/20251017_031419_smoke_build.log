@@ -1,0 +1,64 @@
++ echo 'Starting Web Stable Diffusion smoke build'
+Starting Web Stable Diffusion smoke build
++ command -v sudo
++ sudo -n true
++ sudo apt update
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Hit:1 http://archive.ubuntu.com/ubuntu plucky InRelease
+Get:2 http://security.ubuntu.com/ubuntu plucky-security InRelease [126 kB]
+Get:3 http://archive.ubuntu.com/ubuntu plucky-updates InRelease [126 kB]
+Get:4 http://security.ubuntu.com/ubuntu plucky-security/universe amd64 Packages [214 kB]
+Get:5 http://archive.ubuntu.com/ubuntu plucky-backports InRelease [126 kB]
+Get:6 http://archive.ubuntu.com/ubuntu plucky-updates/main amd64 Packages [464 kB]
+Get:7 http://security.ubuntu.com/ubuntu plucky-security/main amd64 Packages [315 kB]
+Get:8 http://security.ubuntu.com/ubuntu plucky-security/restricted amd64 Packages [301 kB]
+Get:9 http://archive.ubuntu.com/ubuntu plucky-updates/restricted amd64 Packages [336 kB]
+Get:10 http://archive.ubuntu.com/ubuntu plucky-updates/multiverse amd64 Packages [31.6 kB]
+Get:11 http://archive.ubuntu.com/ubuntu plucky-updates/universe amd64 Packages [288 kB]
+Fetched 2,328 kB in 0s (7,624 kB/s)
+Reading package lists...
+Building dependency tree...
+Reading state information...
+1 package can be upgraded. Run 'apt list --upgradable' to see it.
++ sudo apt upgrade -y
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Calculating upgrade...
+Upgrading:
+  libpcre2-8-0
+
+Summary:
+  Upgrading: 1, Installing: 0, Removing: 0, Not Upgrading: 0
+  Download size: 287 kB
+  Space needed: 0 B / 122 GB available
+
+Get:1 http://archive.ubuntu.com/ubuntu plucky-updates/main amd64 libpcre2-8-0 amd64 10.45-1ubuntu0.1 [287 kB]
+debconf: unable to initialize frontend: Dialog
+debconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+dpkg-preconfigure: unable to re-open stdin: 
+Fetched 287 kB in 1s (469 kB/s)
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 60782 files and directories currently installed.)
+Preparing to unpack .../libpcre2-8-0_10.45-1ubuntu0.1_amd64.deb ...
+Unpacking libpcre2-8-0:amd64 (10.45-1ubuntu0.1) over (10.45-1) ...
+Setting up libpcre2-8-0:amd64 (10.45-1ubuntu0.1) ...
+Processing triggers for libc-bin (2.41-6ubuntu1.2) ...
++ sudo apt install -y build-essential git cmake ninja-build pkg-config python3-pip curl wget unzip ca-certificates libtinfo-dev libedit-dev libssl-dev libbz2-dev libreadline-dev libsqlite3-dev zlib1g-dev libffi-dev liblzma-dev libncursesw5-dev libgdbm-dev llvm-16 llvm-16-dev llvm-16-tools
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Error: Unable to locate package llvm-16
+Error: Unable to locate package llvm-16-dev
+Error: Unable to locate package llvm-16-tools
