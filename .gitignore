@@ -76,3 +76,5 @@ coverage/
 emsdk/
 tvm/build/
 web-stable-diffusion/dist/
+logs/
+logs/*

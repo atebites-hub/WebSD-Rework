@@ -1,497 +1,0 @@
-+ echo 'Starting Web Stable Diffusion smoke build'
-Starting Web Stable Diffusion smoke build
-+ command -v sudo
-+ sudo -n true
-+ sudo apt update
-
-WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
-
-Hit:1 http://security.ubuntu.com/ubuntu plucky-security InRelease
-Hit:2 http://archive.ubuntu.com/ubuntu plucky InRelease
-Hit:3 http://archive.ubuntu.com/ubuntu plucky-updates InRelease
-Hit:4 http://archive.ubuntu.com/ubuntu plucky-backports InRelease
-Reading package lists...
-Building dependency tree...
-Reading state information...
-All packages are up to date.
-+ sudo apt upgrade -y
-
-WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
-
-Reading package lists...
-Building dependency tree...
-Reading state information...
-Calculating upgrade...
-Summary:
-  Upgrading: 0, Installing: 0, Removing: 0, Not Upgrading: 0
-+ set +e
-+ sudo apt install -y build-essential git cmake ninja-build pkg-config python3-pip curl wget unzip ca-certificates libtinfo-dev libedit-dev libssl-dev libbz2-dev libreadline-dev libsqlite3-dev zlib1g-dev libffi-dev liblzma-dev libncursesw5-dev libgdbm-dev llvm-16 llvm-16-dev llvm-16-tools
-
-WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
-
-Reading package lists...
-Building dependency tree...
-Reading state information...
-Error: Unable to locate package llvm-16
-Error: Unable to locate package llvm-16-dev
-Error: Unable to locate package llvm-16-tools
-+ INSTALL_EXIT=100
-+ set -e
-+ '[' 100 -ne 0 ']'
-+ echo 'llvm-16 packages not found via apt; attempting to add LLVM apt repo and retry'
-llvm-16 packages not found via apt; attempting to add LLVM apt repo and retry
-+ sudo apt install -y gnupg ca-certificates lsb-release
-
-WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
-
-Reading package lists...
-Building dependency tree...
-Reading state information...
-gnupg is already the newest version (2.4.4-2ubuntu23.1).
-gnupg set to manually installed.
-ca-certificates is already the newest version (20241223).
-Installing:
-  lsb-release
-
-Summary:
-  Upgrading: 0, Installing: 1, Removing: 0, Not Upgrading: 0
-  Download size: 5,910 B
-  Space needed: 17.4 kB / 122 GB available
-
-Get:1 http://archive.ubuntu.com/ubuntu plucky/main amd64 lsb-release all 12.1-1 [5,910 B]
-debconf: unable to initialize frontend: Dialog
-debconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)
-debconf: falling back to frontend: Readline
-debconf: unable to initialize frontend: Readline
-debconf: (This frontend requires a controlling tty.)
-debconf: falling back to frontend: Teletype
-dpkg-preconfigure: unable to re-open stdin: 
-Fetched 5,910 B in 0s (30.7 kB/s)
-Selecting previously unselected package lsb-release.
-(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 60782 files and directories currently installed.)
-Preparing to unpack .../lsb-release_12.1-1_all.deb ...
-Unpacking lsb-release (12.1-1) ...
-Setting up lsb-release (12.1-1) ...
-Processing triggers for man-db (2.13.0-1) ...
-++ lsb_release -sc
-+ CODENAME=plucky
-+ sudo mkdir -p /etc/apt/keyrings
-+ wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key
-+ sudo gpg --dearmor -o /etc/apt/keyrings/llvm-archive-keyring.gpg
-+ echo 'deb [signed-by=/etc/apt/keyrings/llvm-archive-keyring.gpg] http://apt.llvm.org/plucky/ llvm-toolchain-plucky-16 main'
-+ sudo tee /etc/apt/sources.list.d/llvm.list
-deb [signed-by=/etc/apt/keyrings/llvm-archive-keyring.gpg] http://apt.llvm.org/plucky/ llvm-toolchain-plucky-16 main
-+ sudo apt update
-
-WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
-
-Hit:2 http://security.ubuntu.com/ubuntu plucky-security InRelease
-Hit:3 http://archive.ubuntu.com/ubuntu plucky InRelease
-Ign:1 https://apt.llvm.org/plucky llvm-toolchain-plucky-16 InRelease
-Hit:5 http://archive.ubuntu.com/ubuntu plucky-updates InRelease
-Hit:6 http://archive.ubuntu.com/ubuntu plucky-backports InRelease
-Err:4 https://apt.llvm.org/plucky llvm-toolchain-plucky-16 Release
-  404  Not Found [IP: 199.232.198.49 443]
-Reading package lists...
-Error: The repository 'http://apt.llvm.org/plucky llvm-toolchain-plucky-16 Release' does not have a Release file.
-+ true
-+ sudo apt install -y llvm-16 llvm-16-dev llvm-16-tools
-
-WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
-
-Reading package lists...
-Building dependency tree...
-Reading state information...
-Error: Unable to locate package llvm-16
-Error: Unable to locate package llvm-16-dev
-Error: Unable to locate package llvm-16-tools
-+ echo 'Failed to install llvm-16 from the LLVM apt repo; falling back to distro llvm/clang packages'
-Failed to install llvm-16 from the LLVM apt repo; falling back to distro llvm/clang packages
-+ sudo apt install -y llvm clang
-
-WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
-
-Reading package lists...
-Building dependency tree...
-Reading state information...
-clang is already the newest version (1:20.0-63ubuntu1).
-Installing:
-  llvm
-
-Installing dependencies:
-  llvm-runtime
-
-Summary:
-  Upgrading: 0, Installing: 2, Removing: 0, Not Upgrading: 0
-  Download size: 10.1 kB
-  Space needed: 131 kB / 122 GB available
-
-Get:1 http://archive.ubuntu.com/ubuntu plucky/universe amd64 llvm-runtime amd64 1:20.0-63ubuntu1 [5,946 B]
-Get:2 http://archive.ubuntu.com/ubuntu plucky/universe amd64 llvm amd64 1:20.0-63ubuntu1 [4,146 B]
-debconf: unable to initialize frontend: Dialog
-debconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)
-debconf: falling back to frontend: Readline
-debconf: unable to initialize frontend: Readline
-debconf: (This frontend requires a controlling tty.)
-debconf: falling back to frontend: Teletype
-dpkg-preconfigure: unable to re-open stdin: 
-Fetched 10.1 kB in 0s (35.0 kB/s)
-Selecting previously unselected package llvm-runtime:amd64.
-(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 60787 files and directories currently installed.)
-Preparing to unpack .../llvm-runtime_1%3a20.0-63ubuntu1_amd64.deb ...
-Unpacking llvm-runtime:amd64 (1:20.0-63ubuntu1) ...
-Selecting previously unselected package llvm.
-Preparing to unpack .../llvm_1%3a20.0-63ubuntu1_amd64.deb ...
-Unpacking llvm (1:20.0-63ubuntu1) ...
-Setting up llvm-runtime:amd64 (1:20.0-63ubuntu1) ...
-Setting up llvm (1:20.0-63ubuntu1) ...
-Processing triggers for man-db (2.13.0-1) ...
-+ curl -fsSL https://deb.nodesource.com/setup_18.x
-+ sudo -E bash -
-[38;5;79m2025-10-17 03:15:15 - Installing pre-requisites[0m
-
-WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
-
-Ign:1 https://apt.llvm.org/plucky llvm-toolchain-plucky-16 InRelease
-Err:2 https://apt.llvm.org/plucky llvm-toolchain-plucky-16 Release
-  404  Not Found [IP: 199.232.194.49 443]
-Hit:3 http://archive.ubuntu.com/ubuntu plucky InRelease
-Hit:4 http://security.ubuntu.com/ubuntu plucky-security InRelease
-Hit:5 http://archive.ubuntu.com/ubuntu plucky-updates InRelease
-Hit:6 http://archive.ubuntu.com/ubuntu plucky-backports InRelease
-Reading package lists...
-Error: The repository 'http://apt.llvm.org/plucky llvm-toolchain-plucky-16 Release' does not have a Release file.
-[1;31m2025-10-17 03:15:16 - Error: Failed to run 'apt update' (Exit Code: 0)[0m
-+ sudo apt install -y nodejs
-
-WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
-
-Reading package lists...
-Building dependency tree...
-Reading state information...
-Installing:
-  nodejs
-
-Installing dependencies:
-  libcares2   node-balanced-match    node-minimatch  nodejs-doc
-  libnode115  node-brace-expansion   node-undici
-  node-acorn  node-cjs-module-lexer  node-xtend
-
-Suggested packages:
-  npm  node-corepack
-
-Summary:
-  Upgrading: 0, Installing: 11, Removing: 0, Not Upgrading: 0
-  Download size: 18.2 MB
-  Space needed: 79.9 MB / 122 GB available
-
-Get:1 http://archive.ubuntu.com/ubuntu plucky-updates/main amd64 libcares2 amd64 1.34.4-2.1ubuntu0.1 [110 kB]
-Get:2 http://archive.ubuntu.com/ubuntu plucky/universe amd64 node-xtend all 4.0.2-3 [3,902 B]
-Get:3 http://archive.ubuntu.com/ubuntu plucky/universe amd64 nodejs amd64 20.18.1+dfsg-1ubuntu2 [334 kB]
-Get:4 http://archive.ubuntu.com/ubuntu plucky/universe amd64 node-acorn all 8.8.1+ds+~cs25.17.7-2 [115 kB]
-Get:5 http://archive.ubuntu.com/ubuntu plucky/universe amd64 node-cjs-module-lexer all 1.2.3+dfsg-1 [32.1 kB]
-Get:6 http://archive.ubuntu.com/ubuntu plucky/universe amd64 node-balanced-match all 2.0.0-1 [4,910 B]
-Get:7 http://archive.ubuntu.com/ubuntu plucky/universe amd64 node-brace-expansion all 2.0.1+~1.1.0-1 [8,072 B]
-Get:8 http://archive.ubuntu.com/ubuntu plucky/universe amd64 node-minimatch all 9.0.3-5 [78.2 kB]
-Get:9 http://archive.ubuntu.com/ubuntu plucky/universe amd64 node-undici all 7.3.0+dfsg1+~cs24.12.11-1 [341 kB]
-Get:10 http://archive.ubuntu.com/ubuntu plucky/universe amd64 libnode115 amd64 20.18.1+dfsg-1ubuntu2 [13.3 MB]
-Get:11 http://archive.ubuntu.com/ubuntu plucky/universe amd64 nodejs-doc all 20.18.1+dfsg-1ubuntu2 [3,828 kB]
-debconf: unable to initialize frontend: Dialog
-debconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)
-debconf: falling back to frontend: Readline
-debconf: unable to initialize frontend: Readline
-debconf: (This frontend requires a controlling tty.)
-debconf: falling back to frontend: Teletype
-dpkg-preconfigure: unable to re-open stdin: 
-Fetched 18.2 MB in 1s (12.3 MB/s)
-Selecting previously unselected package libcares2:amd64.
-(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 60888 files and directories currently installed.)
-Preparing to unpack .../00-libcares2_1.34.4-2.1ubuntu0.1_amd64.deb ...
-Unpacking libcares2:amd64 (1.34.4-2.1ubuntu0.1) ...
-Selecting previously unselected package node-xtend.
-Preparing to unpack .../01-node-xtend_4.0.2-3_all.deb ...
-Unpacking node-xtend (4.0.2-3) ...
-Selecting previously unselected package nodejs.
-Preparing to unpack .../02-nodejs_20.18.1+dfsg-1ubuntu2_amd64.deb ...
-Unpacking nodejs (20.18.1+dfsg-1ubuntu2) ...
-Selecting previously unselected package node-acorn.
-Preparing to unpack .../03-node-acorn_8.8.1+ds+~cs25.17.7-2_all.deb ...
-Unpacking node-acorn (8.8.1+ds+~cs25.17.7-2) ...
-Selecting previously unselected package node-cjs-module-lexer.
-Preparing to unpack .../04-node-cjs-module-lexer_1.2.3+dfsg-1_all.deb ...
-Unpacking node-cjs-module-lexer (1.2.3+dfsg-1) ...
-Selecting previously unselected package node-balanced-match.
-Preparing to unpack .../05-node-balanced-match_2.0.0-1_all.deb ...
-Unpacking node-balanced-match (2.0.0-1) ...
-Selecting previously unselected package node-brace-expansion.
-Preparing to unpack .../06-node-brace-expansion_2.0.1+~1.1.0-1_all.deb ...
-Unpacking node-brace-expansion (2.0.1+~1.1.0-1) ...
-Selecting previously unselected package node-minimatch.
-Preparing to unpack .../07-node-minimatch_9.0.3-5_all.deb ...
-Unpacking node-minimatch (9.0.3-5) ...
-Selecting previously unselected package node-undici.
-Preparing to unpack .../08-node-undici_7.3.0+dfsg1+~cs24.12.11-1_all.deb ...
-Unpacking node-undici (7.3.0+dfsg1+~cs24.12.11-1) ...
-Selecting previously unselected package libnode115:amd64.
-Preparing to unpack .../09-libnode115_20.18.1+dfsg-1ubuntu2_amd64.deb ...
-Unpacking libnode115:amd64 (20.18.1+dfsg-1ubuntu2) ...
-Selecting previously unselected package nodejs-doc.
-Preparing to unpack .../10-nodejs-doc_20.18.1+dfsg-1ubuntu2_all.deb ...
-Unpacking nodejs-doc (20.18.1+dfsg-1ubuntu2) ...
-Setting up node-cjs-module-lexer (1.2.3+dfsg-1) ...
-Setting up node-balanced-match (2.0.0-1) ...
-Setting up node-brace-expansion (2.0.1+~1.1.0-1) ...
-Setting up libcares2:amd64 (1.34.4-2.1ubuntu0.1) ...
-Setting up nodejs-doc (20.18.1+dfsg-1ubuntu2) ...
-Setting up node-undici (7.3.0+dfsg1+~cs24.12.11-1) ...
-Setting up node-minimatch (9.0.3-5) ...
-Setting up node-xtend (4.0.2-3) ...
-Setting up libnode115:amd64 (20.18.1+dfsg-1ubuntu2) ...
-Setting up nodejs (20.18.1+dfsg-1ubuntu2) ...
-update-alternatives: using /usr/bin/nodejs to provide /usr/bin/js (js) in auto mode
-update-alternatives: warning: skip creation of /usr/share/man/man1/js.1.gz because associated file /usr/share/man/man1/nodejs.1.gz (of link group js) doesn't exist
-Setting up node-acorn (8.8.1+ds+~cs25.17.7-2) ...
-Processing triggers for libc-bin (2.41-6ubuntu1.2) ...
-Processing triggers for man-db (2.13.0-1) ...
-+ '[' '!' -d /home/ubuntu/emsdk ']'
-+ git clone https://github.com/emscripten-core/emsdk.git /home/ubuntu/emsdk
-Cloning into '/home/ubuntu/emsdk'...
-+ pushd /home/ubuntu/emsdk
-+ ./emsdk install latest
-Resolving SDK alias 'latest' to '4.0.16'
-Resolving SDK version '4.0.16' to 'sdk-releases-e68ea3dc5ca3eda4e2bba62359b033074e506925-64bit'
-Installing SDK 'sdk-releases-e68ea3dc5ca3eda4e2bba62359b033074e506925-64bit'..
-Installing tool 'node-22.16.0-64bit'..
-Downloading: /home/ubuntu/emsdk/downloads/node-v22.16.0-linux-x64.tar.xz from https://storage.googleapis.com/webassembly/emscripten-releases-builds/deps/node-v22.16.0-linux-x64.tar.xz, 30425588 Bytes
- [----------------------------------------------------------------------------]
-Unpacking '/home/ubuntu/emsdk/downloads/node-v22.16.0-linux-x64.tar.xz' to '/home/ubuntu/emsdk/node/22.16.0_64bit'
-Done installing tool 'node-22.16.0-64bit'.
-Installing tool 'releases-e68ea3dc5ca3eda4e2bba62359b033074e506925-64bit'..
-Downloading: /home/ubuntu/emsdk/downloads/e68ea3dc5ca3eda4e2bba62359b033074e506925-wasm-binaries.tar.xz from https://storage.googleapis.com/webassembly/emscripten-releases-builds/linux/e68ea3dc5ca3eda4e2bba62359b033074e506925/wasm-binaries.tar.xz, 353955480 Bytes
- [----------------------------------------------------------------------------]
-Unpacking '/home/ubuntu/emsdk/downloads/e68ea3dc5ca3eda4e2bba62359b033074e506925-wasm-binaries.tar.xz' to '/home/ubuntu/emsdk/upstream'
-Done installing tool 'releases-e68ea3dc5ca3eda4e2bba62359b033074e506925-64bit'.
-Done installing SDK 'sdk-releases-e68ea3dc5ca3eda4e2bba62359b033074e506925-64bit'.
-+ ./emsdk activate latest
-Resolving SDK alias 'latest' to '4.0.16'
-Resolving SDK version '4.0.16' to 'sdk-releases-e68ea3dc5ca3eda4e2bba62359b033074e506925-64bit'
-Setting the following tools as active:
-   node-22.16.0-64bit
-   releases-e68ea3dc5ca3eda4e2bba62359b033074e506925-64bit
-
-Next steps:
-- To conveniently access emsdk tools from the command line,
-  consider adding the following directories to your PATH:
-    /home/ubuntu/emsdk
-    /home/ubuntu/emsdk/upstream/emscripten
-- This can be done for the current shell by running:
-    source "/home/ubuntu/emsdk/emsdk_env.sh"
-- Configure emsdk in your shell startup scripts by running:
-    echo 'source "/home/ubuntu/emsdk/emsdk_env.sh"' >> $HOME/.bash_profile
-+ source ./emsdk_env.sh
-++ CURRENT_SCRIPT=
-++ DIR=.
-++ '[' -n ./emsdk_env.sh ']'
-++ CURRENT_SCRIPT=./emsdk_env.sh
-++ '[' -n ./emsdk_env.sh ']'
-+++ dirname ./emsdk_env.sh
-++ DIR=.
-++ '[' -h ./emsdk_env.sh ']'
-++ unset CURRENT_SCRIPT
-++ '[' '!' -f ./emsdk.py ']'
-+++ EMSDK_BASH=1
-+++ ./emsdk construct_env
-Setting up EMSDK environment (suppress these messages with EMSDK_QUIET=1)
-Adding directories to PATH:
-PATH += /home/ubuntu/emsdk
-PATH += /home/ubuntu/emsdk/upstream/emscripten
-
-Setting environment variables:
-PATH = /home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-EMSDK = /home/ubuntu/emsdk
-EMSDK_NODE = /home/ubuntu/emsdk/node/22.16.0_64bit/bin/node
-++ eval export 'PATH="/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";' export 'EMSDK="/home/ubuntu/emsdk";' export 'EMSDK_NODE="/home/ubuntu/emsdk/node/22.16.0_64bit/bin/node";'
-+++ export PATH=/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-+++ PATH=/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-+++ export EMSDK=/home/ubuntu/emsdk
-+++ EMSDK=/home/ubuntu/emsdk
-+++ export EMSDK_NODE=/home/ubuntu/emsdk/node/22.16.0_64bit/bin/node
-+++ EMSDK_NODE=/home/ubuntu/emsdk/node/22.16.0_64bit/bin/node
-++ unset DIR
-+ popd
-+ command -v pyenv
-+ bash
-+ curl https://pyenv.run
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   270  100   270    0     0    981      0 --:--:-- --:--:-- --:--:--   981
-Cloning into '/home/ubuntu/.pyenv'...
-Cloning into '/home/ubuntu/.pyenv/plugins/pyenv-doctor'...
-Cloning into '/home/ubuntu/.pyenv/plugins/pyenv-update'...
-Cloning into '/home/ubuntu/.pyenv/plugins/pyenv-virtualenv'...
-
-WARNING: seems you still have not added 'pyenv' to the load path.
-
-# Load pyenv automatically by appending
-# the following to 
-# ~/.bash_profile if it exists, otherwise ~/.profile (for login shells)
-# and ~/.bashrc (for interactive shells) :
-
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init - bash)"
-
-# Restart your shell for the changes to take effect.
-
-# Load pyenv-virtualenv automatically by adding
-# the following to ~/.bashrc:
-
-eval "$(pyenv virtualenv-init -)"
-
-+ export PATH=/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-+ PATH=/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-++ pyenv init -
-+ eval 'PATH="$(bash --norc -ec '\''IFS=:; paths=($PATH); 
-for i in ${!paths[@]}; do 
-if [[ ${paths[i]} == "'\'''\''/home/ubuntu/.pyenv/shims'\'''\''" ]]; then unset '\''\'\'''\''paths[i]'\''\'\'''\''; 
-fi; done; 
-echo "${paths[*]}"'\'')"
-export PATH="/home/ubuntu/.pyenv/shims:${PATH}"
-export PYENV_SHELL=bash
-source '\''/home/ubuntu/.pyenv/completions/pyenv.bash'\''
-command pyenv rehash 2>/dev/null
-pyenv() {
-  local command=${1:-}
-  [ "$#" -gt 0 ] && shift
-  case "$command" in
-  activate|deactivate|rehash|shell)
-    eval "$(pyenv "sh-$command" "$@")"
-    ;;
-  *)
-    command pyenv "$command" "$@"
-    ;;
-  esac
-}'
-+++ bash --norc -ec 'IFS=:; paths=($PATH); 
-for i in ${!paths[@]}; do 
-if [[ ${paths[i]} == "/home/ubuntu/.pyenv/shims" ]]; then unset '\''paths[i]'\''; 
-fi; done; 
-echo "${paths[*]}"'
-++ PATH=/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-++ export PATH=/home/ubuntu/.pyenv/shims:/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-++ PATH=/home/ubuntu/.pyenv/shims:/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-++ export PYENV_SHELL=bash
-++ PYENV_SHELL=bash
-++ source /home/ubuntu/.pyenv/completions/pyenv.bash
-+++ complete -F _pyenv pyenv
-++ command pyenv rehash
-++ pyenv virtualenv-init -
-++ local command=virtualenv-init
-++ '[' 2 -gt 0 ']'
-++ shift
-++ case "$command" in
-++ command pyenv virtualenv-init -
-+ eval 'export PATH="/home/ubuntu/.pyenv/plugins/pyenv-virtualenv/shims:${PATH}";
-export PYENV_VIRTUALENV_INIT=1;
-_pyenv_virtualenv_hook() {
-  local ret=$?
-  if [ -n "${VIRTUAL_ENV-}" ]; then
-    eval "$(pyenv sh-activate --quiet || pyenv sh-deactivate --quiet || true)" || true
-  else
-    eval "$(pyenv sh-activate --quiet || true)" || true
-  fi
-  return $ret
-};
-if ! [[ "${PROMPT_COMMAND-}" =~ _pyenv_virtualenv_hook ]]; then
-  PROMPT_COMMAND="_pyenv_virtualenv_hook;${PROMPT_COMMAND-}"
-fi'
-++ export PATH=/home/ubuntu/.pyenv/plugins/pyenv-virtualenv/shims:/home/ubuntu/.pyenv/shims:/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-++ PATH=/home/ubuntu/.pyenv/plugins/pyenv-virtualenv/shims:/home/ubuntu/.pyenv/shims:/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-++ export PYENV_VIRTUALENV_INIT=1
-++ PYENV_VIRTUALENV_INIT=1
-++ [[ '' =~ _pyenv_virtualenv_hook ]]
-++ PROMPT_COMMAND='_pyenv_virtualenv_hook;'
-+ pyenv versions --bare
-+ local command=versions
-+ '[' 2 -gt 0 ']'
-+ shift
-+ case "$command" in
-+ command pyenv versions --bare
-+ grep -qx '^3.13.0$'
-+ pyenv install -s 3.13.0
-+ local command=install
-+ '[' 3 -gt 0 ']'
-+ shift
-+ case "$command" in
-+ command pyenv install -s 3.13.0
-Downloading Python-3.13.0.tar.xz...
--> https://www.python.org/ftp/python/3.13.0/Python-3.13.0.tar.xz
-Installing Python-3.13.0...
-Traceback (most recent call last):
-  File "<string>", line 1, in <module>
-    import bz2
-  File "/home/ubuntu/.pyenv/versions/3.13.0/lib/python3.13/bz2.py", line 17, in <module>
-    from _bz2 import BZ2Compressor, BZ2Decompressor
-ModuleNotFoundError: No module named '_bz2'
-WARNING: The Python bz2 extension was not compiled. Missing the bzip2 lib?
-Traceback (most recent call last):
-  File "<string>", line 1, in <module>
-    import readline
-ModuleNotFoundError: No module named 'readline'
-WARNING: The Python readline extension was not compiled. Missing the GNU readline lib?
-Traceback (most recent call last):
-  File "<string>", line 1, in <module>
-    import ssl
-  File "/home/ubuntu/.pyenv/versions/3.13.0/lib/python3.13/ssl.py", line 100, in <module>
-    import _ssl             # if we can't import it, let the error propagate
-    ^^^^^^^^^^^
-ModuleNotFoundError: No module named '_ssl'
-ERROR: The Python ssl extension was not compiled. Missing the OpenSSL lib?
-
-Please consult to the Wiki page to fix the problem.
-https://github.com/pyenv/pyenv/wiki/Common-build-problems
-
-
-BUILD FAILED (Ubuntu 25.04 using python-build 2.6.11)
-
-Inspect or clean up the working tree at /tmp/python-build.20251017031530.5052
-Results logged to /tmp/python-build.20251017031530.5052.log
-
-Last 10 log lines:
-	LD_LIBRARY_PATH=/tmp/python-build.20251017031530.5052/Python-3.13.0 ./python -E -m ensurepip \
-		$ensurepip --root=/ ; \
-fi
-WARNING: Disabling truststore since ssl support is missing
-Looking in links: /tmp/tmprcubbqda
-Processing /tmp/tmprcubbqda/pip-24.2-py3-none-any.whl
-Installing collected packages: pip
-  WARNING: The scripts pip3 and pip3.13 are installed in '/home/ubuntu/.pyenv/versions/3.13.0/bin' which is not on PATH.
-  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
-Successfully installed pip-24.2
-+ true
-+ pyenv virtualenv -f 3.13.0 websd-venv-3.13
-+ local command=virtualenv
-+ '[' 4 -gt 0 ']'
-+ shift
-+ case "$command" in
-+ command pyenv virtualenv -f 3.13.0 websd-venv-3.13
-pyenv-virtualenv: `3.13.0' is not installed in pyenv.
-Run `pyenv install 3.13.0' to install it.
-+ true
-+ pyenv activate websd-venv-3.13
-+ local command=activate
-+ '[' 2 -gt 0 ']'
-+ shift
-+ case "$command" in
-++ pyenv sh-activate websd-venv-3.13
-++ local command=sh-activate
-++ '[' 2 -gt 0 ']'
-++ shift
-++ case "$command" in
-++ command pyenv sh-activate websd-venv-3.13
-pyenv-virtualenv: version `websd-venv-3.13' is not a virtualenv
-+ eval false
-++ false
-+ true
-+ python -m pip install --upgrade pip setuptools wheel
-scripts/ci/smoke_build_ubuntu_24_04.sh: line 80: python: command not found
