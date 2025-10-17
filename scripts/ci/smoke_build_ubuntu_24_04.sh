@@ -22,12 +22,17 @@ OS_NAME=$(uname)
 if [ "$OS_NAME" = "Darwin" ]; then
   if command -v brew >/dev/null 2>&1 && [ -d "$(brew --prefix llvm 2>/dev/null)" ]; then
     LLVM_CONFIG_EXECUTABLE="$(brew --prefix llvm)/bin/llvm-config"
+    # Help CMake locate Homebrew's keg-only LLVM CMake files
+    LLVM_DIR="$(brew --prefix llvm)/lib/cmake/llvm"
+    export CMAKE_PREFIX_PATH="$LLVM_DIR:$CMAKE_PREFIX_PATH"
+    export LLVM_DIR
   else
     LLVM_CONFIG_EXECUTABLE="$(which llvm-config 2>/dev/null || echo /opt/homebrew/opt/llvm/bin/llvm-config)"
   fi
 else
   LLVM_CONFIG_EXECUTABLE="$(which llvm-config || echo /usr/bin/llvm-config-16)"
 fi
+export LLVM_CONFIG_EXECUTABLE
 if [ "$OS_NAME" = "Darwin" ]; then
   echo "Detected macOS; attempting Homebrew-based package installs where possible"
   if command -v brew >/dev/null 2>&1; then
