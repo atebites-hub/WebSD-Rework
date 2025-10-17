@@ -80,43 +80,39 @@ fi
 
 
 # Prefer a brewed llvm-config on macOS if available so CMake can find LLVM
+# Consolidated Homebrew LLVM handling: set LLVM_CONFIG_EXECUTABLE, LLVM_DIR,
+# and safely prepend LDFLAGS/CPPFLAGS/PKG_CONFIG_PATH without duplicating logic.
 if [ "$OS_NAME" = "Darwin" ]; then
-  if command -v brew >/dev/null 2>&1; then
-    # Prefer llvm@16 if installed (Homebrew keeps multiple llvm versions)
-    BREW_LLVM16_PREFIX="$(brew --prefix llvm@16 2>/dev/null || true)"
-    BREW_LLVM_PREFIX="$(brew --prefix llvm 2>/dev/null || true)"
-    if [ -n "$BREW_LLVM16_PREFIX" ] && [ -d "$BREW_LLVM16_PREFIX" ]; then
-      LLVM_CONFIG_EXECUTABLE="$BREW_LLVM16_PREFIX/bin/llvm-config"
-      LLVM_DIR="$BREW_LLVM16_PREFIX/lib/cmake/llvm"
-      export PATH="$BREW_LLVM16_PREFIX/bin:$PATH"
-      # Only append an extra space when existing flags are present to avoid trailing whitespace
-    # Prepend new flags and ensure a separating space if existing flags are present
-    if [ -n "${LDFLAGS:-}" ]; then
-      export LDFLAGS="-L$BREW_LLVM16_PREFIX/lib $LDFLAGS"
-    else
-      export LDFLAGS="-L$BREW_LLVM16_PREFIX/lib"
-    fi
-    if [ -n "${CPPFLAGS:-}" ]; then
-      export CPPFLAGS="-I$BREW_LLVM16_PREFIX/include $CPPFLAGS"
-    else
-      export CPPFLAGS="-I$BREW_LLVM16_PREFIX/include"
-    fi
-      export PKG_CONFIG_PATH="$BREW_LLVM16_PREFIX/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
-    elif [ -n "$BREW_LLVM_PREFIX" ] && [ -d "$BREW_LLVM_PREFIX" ]; then
-      LLVM_CONFIG_EXECUTABLE="$BREW_LLVM_PREFIX/bin/llvm-config"
-      LLVM_DIR="$BREW_LLVM_PREFIX/lib/cmake/llvm"
-      export PATH="$BREW_LLVM_PREFIX/bin:$PATH"
-    else
-      LLVM_CONFIG_EXECUTABLE="$(which llvm-config 2>/dev/null || echo /opt/homebrew/opt/llvm/bin/llvm-config)"
-    fi
+  if command -v brew >/dev/null 2>&1 && [ -d "$(brew --prefix llvm 2>/dev/null)" ]; then
+    BREW_LLVM_PREFIX="$(brew --prefix llvm)"
+    BREW_OPENSSL_PREFIX="$(brew --prefix openssl 2>/dev/null || brew --prefix openssl@3 2>/dev/null || true)"
+
+    LLVM_CONFIG_EXECUTABLE="$BREW_LLVM_PREFIX/bin/llvm-config"
+    LLVM_DIR="$BREW_LLVM_PREFIX/lib/cmake/llvm"
     : "${CMAKE_PREFIX_PATH:=}"
     if [ -n "$LLVM_DIR" ]; then
       export CMAKE_PREFIX_PATH="$LLVM_DIR${CMAKE_PREFIX_PATH:+:$CMAKE_PREFIX_PATH}"
     fi
     export LLVM_DIR
+
+    LLVM_LIB_DIR="$BREW_LLVM_PREFIX/lib"
+    LLVM_INCLUDE_DIR="$BREW_LLVM_PREFIX/include"
+    OPENSSL_LIB_DIR="${BREW_OPENSSL_PREFIX:+$BREW_OPENSSL_PREFIX/lib}"
+    OPENSSL_INCLUDE_DIR="${BREW_OPENSSL_PREFIX:+$BREW_OPENSSL_PREFIX/include}"
+
+    : "${LDFLAGS:=}"
+    : "${CPPFLAGS:=}"
+    : "${PKG_CONFIG_PATH:=}"
+
+    export LDFLAGS="-L$LLVM_LIB_DIR${OPENSSL_LIB_DIR:+ -L$OPENSSL_LIB_DIR}${LDFLAGS:+ $LDFLAGS}"
+    export CPPFLAGS="-I$LLVM_INCLUDE_DIR${OPENSSL_INCLUDE_DIR:+ -I$OPENSSL_INCLUDE_DIR}${CPPFLAGS:+ $CPPFLAGS}"
+    export PKG_CONFIG_PATH="$LLVM_LIB_DIR/pkgconfig${OPENSSL_LIB_DIR:+:$OPENSSL_LIB_DIR/pkgconfig}${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
   else
-    LLVM_CONFIG_EXECUTABLE="$(which llvm-config 2>/dev/null || echo /usr/bin/llvm-config-16)"
+    LLVM_CONFIG_EXECUTABLE="$(which llvm-config 2>/dev/null || echo /opt/homebrew/opt/llvm/bin/llvm-config)"
   fi
+else
+  LLVM_CONFIG_EXECUTABLE="$(which llvm-config || echo /usr/bin/llvm-config-16)"
+fi
 else
   LLVM_CONFIG_EXECUTABLE="$(which llvm-config || echo /usr/bin/llvm-config-16)"
 fi
