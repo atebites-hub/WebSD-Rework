@@ -7,6 +7,9 @@ FROM ubuntu:24.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
+ARG CACHEBUST=1
+LABEL cachebust=$CACHEBUST
+
 # Set non-root user
 ARG AGENT_USER=agent
 ARG AGENT_UID=1000
