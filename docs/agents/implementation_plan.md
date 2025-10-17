@@ -3,10 +3,10 @@
 Agile plan with sprints and tasks to refactor the project to Apache TVM v0.21.0, modern tvmjs, and WebGPU. Tasks follow TCREI and align with repository structure.
 
 ## Sprint 0: Baseline & Environment
-Goals: Decide Python version pin (3.14 target vs 3.13 fallback), lock toolchain, capture risks.
+Goals: Decide Python version pin (Python 3.13 target), lock toolchain, capture risks.
 Duration: 1 week.
 Tasks:
-1. Verify PyTorch support on Python 3.14; if blocked, pin to Python 3.13 and document the upgrade path.
+1. Verify PyTorch support; project decision: target Python 3.13 with PyTorch 2.7. Document upgrade path to 3.14 if/when required.
 2. Confirm TVM v0.21 build from source and tvmjs runtime bundle generation.
 3. Finalize documentation scaffolding (this plan, tech stack, requirements).
 4. Testing: Smoke build of TVM runtime; doc lint.

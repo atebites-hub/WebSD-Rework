@@ -1,11 +1,11 @@
 # Web Stable Diffusion (Rework)
 
-A comprehensive refactor of the Web Stable Diffusion demo to target Apache TVM v0.21.0, modern tvmjs WebGPU runtime, and a forward-compatible Python toolchain (target: Python 3.14). This repository contains the build-time Python pipeline that compiles PyTorch models into WebAssembly + WGSL shaders and a browser-based runtime that executes compiled Stable Diffusion pipelines on WebGPU-enabled clients.
+A comprehensive refactor of the Web Stable Diffusion demo to target Apache TVM v0.21.0, modern tvmjs WebGPU runtime, and a forward-compatible Python toolchain (target: Python 3.13). This repository contains the build-time Python pipeline that compiles PyTorch models into WebAssembly + WGSL shaders and a browser-based runtime that executes compiled Stable Diffusion pipelines on WebGPU-enabled clients.
 
 ## Quick Start (Developer)
 1. Clone the repo: `git clone <repo-url>`
 2. Set up Python environment (recommended using pyenv/venv):
-   - Target Python: 3.14 (fallback: 3.13 until upstream wheels available)
+   - Target Python: 3.13 (fallbacks are not expected; pin toolchain to 3.13 to match PyTorch 2.7)
    - Install Python deps: `pip install -r web-stable-diffusion/requirements.txt`
 3. Install toolchain for TVM (see `/docs/agents/technology_stack.md` for details). Building TVM from source is required to produce the `tvmjs` runtime bundles for v0.21.
 4. Build model artifacts (example):

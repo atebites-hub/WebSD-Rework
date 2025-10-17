@@ -10,8 +10,8 @@ This document defines the end-to-end stack to run Stable Diffusion entirely in t
 ## Core Components
 
 - Python
-  - Preferred: Python 3.14 (forward-compat target).
-  - Practical build baseline: Python 3.13 if any dependency (notably PyTorch) lags 3.14 packaging. We will validate and bump when upstream wheels land.
+  - Preferred: Python 3.13 (forward-compat target for this project; do not target 3.14).
+  - Practical build baseline: Python 3.13; ensure tooling and CI use Python 3.13 to remain compatible with PyTorch 2.7.
 
 - PyTorch
   - Target: PyTorch 2.7 (aligned with TVM CI upgrades).
@@ -65,7 +65,7 @@ This document defines the end-to-end stack to run Stable Diffusion entirely in t
 ## Constraints and Compatibility
 
 - Python versioning
-  - We will attempt Python 3.14; if PyTorch wheels are not yet available, pin to Python 3.13 for the compile pipeline. This decision is captured in Project Requirements and Sprint 0 exit criteria.
+  - The project will target Python 3.13; pin to Python 3.13 for the compile pipeline to remain compatible with PyTorch 2.7. This decision is captured in Project Requirements and Sprint 0 exit criteria.
 
 - TVM v0.21 web/runtime deltas
   - FFI changes and web runtime upgrade require building tvmjs artifacts from TVM v0.21 sources and validating our JS integration points continue to match public APIs noted above.
