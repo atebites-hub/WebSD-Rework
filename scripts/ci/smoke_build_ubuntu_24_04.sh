@@ -288,7 +288,9 @@ fi
 CONFIG_OK=0
 cmake -S .. -B . -G Ninja \
   -DUSE_LLVM=ON \
-  -DLLVM_CONFIG_EXECUTABLE=${LLVM_CONFIG_EXECUTABLE:-$(which llvm-config || echo /usr/bin/llvm-config-16)} \
+  -DLLVM_CONFIG_EXECUTABLE="${LLVM_CONFIG_EXECUTABLE:-$(which llvm-config || echo /usr/bin/llvm-config-16)}" \
+  -DLLVM_DIR="${LLVM_DIR:-$(brew --prefix llvm@16 2>/dev/null || echo /opt/homebrew/opt/llvm@16)}/lib/cmake/llvm" \
+  -DPython3_EXECUTABLE="${PYTHON_BIN:-$(command -v python3 || command -v python)}" \
   -DUSE_RPC=OFF \
   -DUSE_CUDA=OFF \
   -DUSE_METAL=OFF \
@@ -302,7 +304,9 @@ if [ "$CONFIG_OK" -ne 0 ]; then
   fi
   cmake -S .. -B . -G Ninja \
     -DUSE_LLVM=ON \
-    -DLLVM_CONFIG_EXECUTABLE=$(which llvm-config || echo /usr/bin/llvm-config-16) \
+    -DLLVM_CONFIG_EXECUTABLE="${LLVM_CONFIG_EXECUTABLE:-$(which llvm-config || echo /usr/bin/llvm-config-16)}" \
+    -DLLVM_DIR="${LLVM_DIR:-$(brew --prefix llvm@16 2>/dev/null || echo /opt/homebrew/opt/llvm@16)}/lib/cmake/llvm" \
+    -DPython3_EXECUTABLE="${PYTHON_BIN:-$(command -v python3 || command -v python)}" \
     -DUSE_RPC=OFF \
     -DUSE_CUDA=OFF \
     -DUSE_METAL=OFF \
