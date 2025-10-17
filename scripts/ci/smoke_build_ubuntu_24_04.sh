@@ -39,7 +39,7 @@ if ! command -v pyenv >/dev/null 2>&1; then
   eval "$(pyenv virtualenv-init -)" || true
 fi
 
-if pyenv versions --bare | grep -qv "^3.13.0$"; then
+if ! pyenv versions --bare | grep -qx "^3.13.0$"; then
   pyenv install -s 3.13.0 || true
 fi
 pyenv virtualenv -f 3.13.0 websd-venv-3.13 || true
