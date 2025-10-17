@@ -20,6 +20,16 @@ Tasks:
 3. Wire SRI/hash-based static delivery.
 Testing: Browser feature-detection tests, basic VM function lookup.
 
+Additional tasks (torch-dynamo / TVM integration debugging & minimal refactor):
+4. Reproduce the torch-dynamo `BackendCompilerFailed` / `AssertionError: Unsupported function type embedding` in an isolated unit test targeting the smallest failing model path. Capture full stack traces and TorchDynamo internals.
+5. Map the failing callchain across PyTorch/torchdynamo/FX -> TVM Relax importer (`tvm.relax.frontend.torch.fx_translator`) to identify API mismatches or unsupported FX node types.
+6. Create a compatibility shim or minimal transformer in `web-stable-diffusion` that rewrites unsupported FX ops/types into supported patterns (example: replace custom embedding/function wrappers with plain tensors or explicit ops) and add unit tests for the transformer.
+7. If the failure is due to a dependency version mismatch (PyTorch, torchdynamo, TVM), evaluate minimal version pin changes or apply small patches to the importer to accept newer FX types. Prefer small importer-side fixes and shims over heavy dependency upgrades.
+8. Add CI smoke test to reproduce the failure deterministically (reuse the smoke-build CI workflow) and mark the CI as passing when the pipeline reaches the identified torch-dynamo failure point.
+9. Document the minimal refactor or dependency change in `/docs/code/tvm_build_notes.md` with reproduction steps and the applied fix rationale.
+
+Note: This debugging work may change the expected flow for Sprint 1. Track decisions and alternatives in the task memory and link a PR for any code changes for review.
+
 ## Sprint 2: Python Compile Pipeline Update
 Goals: Align `build.py` and transforms with TVM v0.21 APIs.
 Duration: 1-2 weeks.

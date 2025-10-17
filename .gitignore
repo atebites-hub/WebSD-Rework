@@ -82,3 +82,7 @@ logs/*
 web-stable-diffusion/3rdparty/tvm/
 .cursor/smoke_build_pid.txt
 tvm
+tvm/
+tvm/*
+.cursor/smoke_build_pid.txt
+site
