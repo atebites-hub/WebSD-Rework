@@ -1,7 +1,4 @@
 {
   "terminals": [],
-  "build": {
-    "context": ".",
-    "dockerfile": "Dockerfile"
-  }
+  "agentCanUpdateSnapshot": false
 }
