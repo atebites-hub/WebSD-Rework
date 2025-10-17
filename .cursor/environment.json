@@ -1,0 +1,9 @@
+{
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+  "terminals": [],
+  "install": "./scripts/agent_install.sh",
+  "start": "./scripts/agent_start.sh"
+}
