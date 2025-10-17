@@ -1,0 +1,727 @@
++ echo 'Starting Web Stable Diffusion smoke build'
+Starting Web Stable Diffusion smoke build
++ command -v sudo
++ sudo -n true
++ sudo apt update
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Hit:2 http://security.ubuntu.com/ubuntu plucky-security InRelease
+Ign:1 https://apt.llvm.org/plucky llvm-toolchain-plucky-16 InRelease
+Err:3 https://apt.llvm.org/plucky llvm-toolchain-plucky-16 Release
+  404  Not Found [IP: 199.232.194.49 443]
+Hit:4 http://archive.ubuntu.com/ubuntu plucky InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu plucky-updates InRelease
+Hit:6 http://archive.ubuntu.com/ubuntu plucky-backports InRelease
+Reading package lists...
+Error: The repository 'http://apt.llvm.org/plucky llvm-toolchain-plucky-16 Release' does not have a Release file.
++ set +e
++ sudo apt install -y build-essential git cmake ninja-build pkg-config python3-pip curl wget unzip ca-certificates libtinfo-dev libedit-dev libssl-dev libbz2-dev libreadline-dev libsqlite3-dev zlib1g-dev libffi-dev liblzma-dev libncursesw5-dev libgdbm-dev llvm-16 llvm-16-dev llvm-16-tools
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Error: Unable to locate package llvm-16
+Error: Unable to locate package llvm-16-dev
+Error: Unable to locate package llvm-16-tools
++ INSTALL_EXIT=100
++ set -e
++ '[' 100 -ne 0 ']'
++ echo 'llvm-16 packages not found via apt; attempting to add LLVM apt repo and retry'
+llvm-16 packages not found via apt; attempting to add LLVM apt repo and retry
++ sudo apt install -y gnupg ca-certificates lsb-release
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+gnupg is already the newest version (2.4.4-2ubuntu23.1).
+ca-certificates is already the newest version (20241223).
+lsb-release is already the newest version (12.1-1).
+Summary:
+  Upgrading: 0, Installing: 0, Removing: 0, Not Upgrading: 0
+++ lsb_release -sc
++ CODENAME=plucky
++ sudo mkdir -p /etc/apt/keyrings
++ wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key
++ sudo gpg --dearmor -o /etc/apt/keyrings/llvm-archive-keyring.gpg
+gpg: cannot open '/dev/tty': No such device or address
++ true
++ echo 'deb [signed-by=/etc/apt/keyrings/llvm-archive-keyring.gpg] http://apt.llvm.org/plucky/ llvm-toolchain-plucky-16 main'
++ sudo tee /etc/apt/sources.list.d/llvm.list
+deb [signed-by=/etc/apt/keyrings/llvm-archive-keyring.gpg] http://apt.llvm.org/plucky/ llvm-toolchain-plucky-16 main
++ sudo apt update
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Ign:1 https://apt.llvm.org/plucky llvm-toolchain-plucky-16 InRelease
+Hit:2 http://security.ubuntu.com/ubuntu plucky-security InRelease
+Err:3 https://apt.llvm.org/plucky llvm-toolchain-plucky-16 Release
+  404  Not Found [IP: 199.232.198.49 443]
+Hit:4 http://archive.ubuntu.com/ubuntu plucky InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu plucky-updates InRelease
+Hit:6 http://archive.ubuntu.com/ubuntu plucky-backports InRelease
+Reading package lists...
+Error: The repository 'http://apt.llvm.org/plucky llvm-toolchain-plucky-16 Release' does not have a Release file.
++ true
++ sudo apt install -y llvm-16 llvm-16-dev llvm-16-tools
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Error: Unable to locate package llvm-16
+Error: Unable to locate package llvm-16-dev
+Error: Unable to locate package llvm-16-tools
++ echo 'Failed to install llvm-16 from the LLVM apt repo; falling back to distro llvm/clang packages'
+Failed to install llvm-16 from the LLVM apt repo; falling back to distro llvm/clang packages
++ sudo apt install -y llvm clang
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+llvm is already the newest version (1:20.0-63ubuntu1).
+clang is already the newest version (1:20.0-63ubuntu1).
+Summary:
+  Upgrading: 0, Installing: 0, Removing: 0, Not Upgrading: 0
++ command -v sudo
++ sudo -n true
++ sudo apt install -y libbz2-dev libssl-dev libreadline-dev libsqlite3-dev zlib1g-dev libffi-dev liblzma-dev libncursesw5-dev tk-dev
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+libbz2-dev is already the newest version (1.0.8-6).
+libssl-dev is already the newest version (3.4.1-1ubuntu4).
+libreadline-dev is already the newest version (8.2-6).
+libsqlite3-dev is already the newest version (3.46.1-3ubuntu0.3).
+zlib1g-dev is already the newest version (1:1.3.dfsg+really1.3.1-1ubuntu1).
+libffi-dev is already the newest version (3.4.7-1).
+liblzma-dev is already the newest version (5.6.4-1ubuntu1).
+libncurses-dev is already the newest version (6.5+20250216-2).
+tk-dev is already the newest version (8.6.14build1).
+Summary:
+  Upgrading: 0, Installing: 0, Removing: 0, Not Upgrading: 0
++ curl -fsSL https://deb.nodesource.com/setup_18.x
++ sudo -E bash -
+[38;5;79m2025-10-17 03:27:20 - Installing pre-requisites[0m
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Ign:1 https://apt.llvm.org/plucky llvm-toolchain-plucky-16 InRelease
+Err:2 https://apt.llvm.org/plucky llvm-toolchain-plucky-16 Release
+  404  Not Found [IP: 199.232.198.49 443]
+Hit:3 http://security.ubuntu.com/ubuntu plucky-security InRelease
+Hit:4 http://archive.ubuntu.com/ubuntu plucky InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu plucky-updates InRelease
+Hit:6 http://archive.ubuntu.com/ubuntu plucky-backports InRelease
+Reading package lists...
+Error: The repository 'http://apt.llvm.org/plucky llvm-toolchain-plucky-16 Release' does not have a Release file.
+[1;31m2025-10-17 03:27:21 - Error: Failed to run 'apt update' (Exit Code: 0)[0m
++ sudo apt install -y nodejs
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+nodejs is already the newest version (20.18.1+dfsg-1ubuntu2).
+Summary:
+  Upgrading: 0, Installing: 0, Removing: 0, Not Upgrading: 0
++ '[' '!' -d /home/ubuntu/emsdk ']'
++ echo 'emsdk already present at /home/ubuntu/emsdk'
+emsdk already present at /home/ubuntu/emsdk
++ source /home/ubuntu/emsdk/emsdk_env.sh
+++ CURRENT_SCRIPT=
+++ DIR=.
+++ '[' -n /home/ubuntu/emsdk/emsdk_env.sh ']'
+++ CURRENT_SCRIPT=/home/ubuntu/emsdk/emsdk_env.sh
+++ '[' -n /home/ubuntu/emsdk/emsdk_env.sh ']'
++++ dirname /home/ubuntu/emsdk/emsdk_env.sh
+++ DIR=/home/ubuntu/emsdk
+++ '[' -h /home/ubuntu/emsdk/emsdk_env.sh ']'
+++ unset CURRENT_SCRIPT
+++ '[' '!' -f /home/ubuntu/emsdk/emsdk.py ']'
++++ EMSDK_BASH=1
++++ /home/ubuntu/emsdk/emsdk construct_env
+Setting up EMSDK environment (suppress these messages with EMSDK_QUIET=1)
+Adding directories to PATH:
+PATH += /home/ubuntu/emsdk
+PATH += /home/ubuntu/emsdk/upstream/emscripten
+
+Setting environment variables:
+PATH = /home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+EMSDK = /home/ubuntu/emsdk
+EMSDK_NODE = /home/ubuntu/emsdk/node/22.16.0_64bit/bin/node
+++ eval export 'PATH="/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";' export 'EMSDK="/home/ubuntu/emsdk";' export 'EMSDK_NODE="/home/ubuntu/emsdk/node/22.16.0_64bit/bin/node";'
++++ export PATH=/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export EMSDK=/home/ubuntu/emsdk
++++ EMSDK=/home/ubuntu/emsdk
++++ export EMSDK_NODE=/home/ubuntu/emsdk/node/22.16.0_64bit/bin/node
++++ EMSDK_NODE=/home/ubuntu/emsdk/node/22.16.0_64bit/bin/node
+++ unset DIR
++ '[' -d /home/ubuntu/.pyenv ']'
++ echo 'pyenv directory exists at /home/ubuntu/.pyenv; initializing without re-running installer'
+pyenv directory exists at /home/ubuntu/.pyenv; initializing without re-running installer
++ export PATH=/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++ PATH=/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ pyenv init -
++ eval 'PATH="$(bash --norc -ec '\''IFS=:; paths=($PATH); 
+for i in ${!paths[@]}; do 
+if [[ ${paths[i]} == "'\'''\''/home/ubuntu/.pyenv/shims'\'''\''" ]]; then unset '\''\'\'''\''paths[i]'\''\'\'''\''; 
+fi; done; 
+echo "${paths[*]}"'\'')"
+export PATH="/home/ubuntu/.pyenv/shims:${PATH}"
+export PYENV_SHELL=bash
+source '\''/home/ubuntu/.pyenv/completions/pyenv.bash'\''
+command pyenv rehash 2>/dev/null
+pyenv() {
+  local command=${1:-}
+  [ "$#" -gt 0 ] && shift
+  case "$command" in
+  activate|deactivate|rehash|shell)
+    eval "$(pyenv "sh-$command" "$@")"
+    ;;
+  *)
+    command pyenv "$command" "$@"
+    ;;
+  esac
+}'
++++ bash --norc -ec 'IFS=:; paths=($PATH); 
+for i in ${!paths[@]}; do 
+if [[ ${paths[i]} == "/home/ubuntu/.pyenv/shims" ]]; then unset '\''paths[i]'\''; 
+fi; done; 
+echo "${paths[*]}"'
+++ PATH=/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export PATH=/home/ubuntu/.pyenv/shims:/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/home/ubuntu/.pyenv/shims:/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export PYENV_SHELL=bash
+++ PYENV_SHELL=bash
+++ source /home/ubuntu/.pyenv/completions/pyenv.bash
++++ complete -F _pyenv pyenv
+++ command pyenv rehash
+++ pyenv virtualenv-init -
+++ local command=virtualenv-init
+++ '[' 2 -gt 0 ']'
+++ shift
+++ case "$command" in
+++ command pyenv virtualenv-init -
++ eval 'export PATH="/home/ubuntu/.pyenv/plugins/pyenv-virtualenv/shims:${PATH}";
+export PYENV_VIRTUALENV_INIT=1;
+_pyenv_virtualenv_hook() {
+  local ret=$?
+  if [ -n "${VIRTUAL_ENV-}" ]; then
+    eval "$(pyenv sh-activate --quiet || pyenv sh-deactivate --quiet || true)" || true
+  else
+    eval "$(pyenv sh-activate --quiet || true)" || true
+  fi
+  return $ret
+};
+if ! [[ "${PROMPT_COMMAND-}" =~ _pyenv_virtualenv_hook ]]; then
+  PROMPT_COMMAND="_pyenv_virtualenv_hook;${PROMPT_COMMAND-}"
+fi'
+++ export PATH=/home/ubuntu/.pyenv/plugins/pyenv-virtualenv/shims:/home/ubuntu/.pyenv/shims:/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/home/ubuntu/.pyenv/plugins/pyenv-virtualenv/shims:/home/ubuntu/.pyenv/shims:/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export PYENV_VIRTUALENV_INIT=1
+++ PYENV_VIRTUALENV_INIT=1
+++ [[ '' =~ _pyenv_virtualenv_hook ]]
+++ PROMPT_COMMAND='_pyenv_virtualenv_hook;'
++ '[' 1 -eq 1 ']'
++ pyenv versions --bare
++ local command=versions
++ grep -qx '^3.13.0$'
++ '[' 2 -gt 0 ']'
++ shift
++ case "$command" in
++ command pyenv versions --bare
++ pyenv versions --bare
++ grep -qx '^3.13.0$'
++ local command=versions
++ '[' 2 -gt 0 ']'
++ shift
++ case "$command" in
++ command pyenv versions --bare
++ pyenv virtualenv -f 3.13.0 websd-venv-3.13
++ local command=virtualenv
++ '[' 4 -gt 0 ']'
++ shift
++ case "$command" in
++ command pyenv virtualenv -f 3.13.0 websd-venv-3.13
++ pyenv activate websd-venv-3.13
++ local command=activate
++ '[' 2 -gt 0 ']'
++ shift
++ case "$command" in
+++ pyenv sh-activate websd-venv-3.13
+++ local command=sh-activate
+++ '[' 2 -gt 0 ']'
+++ shift
+++ case "$command" in
+++ command pyenv sh-activate websd-venv-3.13
++ eval 'unset PYENV_VIRTUAL_ENV;
+unset VIRTUAL_ENV;
+if [ -n "${_OLD_VIRTUAL_PATH:-}" ]; then
+  export PATH="${_OLD_VIRTUAL_PATH}";
+  unset _OLD_VIRTUAL_PATH;
+fi;
+if [ -n "${_OLD_VIRTUAL_PYTHONHOME:-}" ]; then
+  export PYTHONHOME="${_OLD_VIRTUAL_PYTHONHOME}";
+  unset _OLD_VIRTUAL_PYTHONHOME;
+fi;
+if [ -n "${_OLD_VIRTUAL_PS1:-}" ]; then
+  export PS1="${_OLD_VIRTUAL_PS1}";
+  unset _OLD_VIRTUAL_PS1;
+fi;
+if declare -f deactivate 1>/dev/null 2>&1; then
+  unset -f deactivate;
+fi;
+export PYENV_VERSION="websd-venv-3.13";
+export PYENV_ACTIVATE_SHELL=1;
+export PYENV_VIRTUAL_ENV="/home/ubuntu/.pyenv/versions/3.13.0/envs/websd-venv-3.13";
+export VIRTUAL_ENV="/home/ubuntu/.pyenv/versions/3.13.0/envs/websd-venv-3.13";
+export _OLD_VIRTUAL_PS1="${PS1:-}";
+export PS1="(websd-venv-3.13) ${PS1:-}";'
+++ unset PYENV_VIRTUAL_ENV
+++ unset VIRTUAL_ENV
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ declare -f deactivate
+++ export PYENV_VERSION=websd-venv-3.13
+++ PYENV_VERSION=websd-venv-3.13
+++ export PYENV_ACTIVATE_SHELL=1
+++ PYENV_ACTIVATE_SHELL=1
+++ export PYENV_VIRTUAL_ENV=/home/ubuntu/.pyenv/versions/3.13.0/envs/websd-venv-3.13
+++ PYENV_VIRTUAL_ENV=/home/ubuntu/.pyenv/versions/3.13.0/envs/websd-venv-3.13
+++ export VIRTUAL_ENV=/home/ubuntu/.pyenv/versions/3.13.0/envs/websd-venv-3.13
+++ VIRTUAL_ENV=/home/ubuntu/.pyenv/versions/3.13.0/envs/websd-venv-3.13
+++ export _OLD_VIRTUAL_PS1=
+++ _OLD_VIRTUAL_PS1=
+++ export 'PS1=(websd-venv-3.13) '
+++ PS1='(websd-venv-3.13) '
++ command -v python
++ PYTHON_BIN=python
++ python -m pip install --upgrade pip setuptools wheel
+Requirement already satisfied: pip in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (25.2)
+Requirement already satisfied: setuptools in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (80.9.0)
+Requirement already satisfied: wheel in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (0.45.1)
++ '[' -f web-stable-diffusion/requirements.txt ']'
++ python -m pip install -r web-stable-diffusion/requirements.txt
+Requirement already satisfied: accelerate in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from -r web-stable-diffusion/requirements.txt (line 1)) (1.10.1)
+Requirement already satisfied: diffusers in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from -r web-stable-diffusion/requirements.txt (line 2)) (0.35.2)
+Requirement already satisfied: transformers in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from -r web-stable-diffusion/requirements.txt (line 3)) (4.57.1)
+Requirement already satisfied: numpy<3.0.0,>=1.17 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (2.3.4)
+Requirement already satisfied: packaging>=20.0 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (25.0)
+Requirement already satisfied: psutil in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (7.1.0)
+Requirement already satisfied: pyyaml in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (6.0.3)
+Requirement already satisfied: torch>=2.0.0 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (2.9.0)
+Requirement already satisfied: huggingface_hub>=0.21.0 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (0.35.3)
+Requirement already satisfied: safetensors>=0.4.3 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (0.6.2)
+Requirement already satisfied: importlib_metadata in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from diffusers->-r web-stable-diffusion/requirements.txt (line 2)) (8.7.0)
+Requirement already satisfied: filelock in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from diffusers->-r web-stable-diffusion/requirements.txt (line 2)) (3.20.0)
+Requirement already satisfied: regex!=2019.12.17 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from diffusers->-r web-stable-diffusion/requirements.txt (line 2)) (2025.9.18)
+Requirement already satisfied: requests in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from diffusers->-r web-stable-diffusion/requirements.txt (line 2)) (2.32.5)
+Requirement already satisfied: Pillow in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from diffusers->-r web-stable-diffusion/requirements.txt (line 2)) (12.0.0)
+Requirement already satisfied: tokenizers<=0.23.0,>=0.22.0 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from transformers->-r web-stable-diffusion/requirements.txt (line 3)) (0.22.1)
+Requirement already satisfied: tqdm>=4.27 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from transformers->-r web-stable-diffusion/requirements.txt (line 3)) (4.67.1)
+Requirement already satisfied: fsspec>=2023.5.0 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from huggingface_hub>=0.21.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (2025.9.0)
+Requirement already satisfied: typing-extensions>=3.7.4.3 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from huggingface_hub>=0.21.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (4.15.0)
+Requirement already satisfied: hf-xet<2.0.0,>=1.1.3 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from huggingface_hub>=0.21.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (1.1.10)
+Requirement already satisfied: setuptools in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (80.9.0)
+Requirement already satisfied: sympy>=1.13.3 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (1.14.0)
+Requirement already satisfied: networkx>=2.5.1 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (3.5)
+Requirement already satisfied: jinja2 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (3.1.6)
+Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.8.93 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (12.8.93)
+Requirement already satisfied: nvidia-cuda-runtime-cu12==12.8.90 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (12.8.90)
+Requirement already satisfied: nvidia-cuda-cupti-cu12==12.8.90 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (12.8.90)
+Requirement already satisfied: nvidia-cudnn-cu12==9.10.2.21 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (9.10.2.21)
+Requirement already satisfied: nvidia-cublas-cu12==12.8.4.1 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (12.8.4.1)
+Requirement already satisfied: nvidia-cufft-cu12==11.3.3.83 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (11.3.3.83)
+Requirement already satisfied: nvidia-curand-cu12==10.3.9.90 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (10.3.9.90)
+Requirement already satisfied: nvidia-cusolver-cu12==11.7.3.90 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (11.7.3.90)
+Requirement already satisfied: nvidia-cusparse-cu12==12.5.8.93 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (12.5.8.93)
+Requirement already satisfied: nvidia-cusparselt-cu12==0.7.1 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (0.7.1)
+Requirement already satisfied: nvidia-nccl-cu12==2.27.5 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (2.27.5)
+Requirement already satisfied: nvidia-nvshmem-cu12==3.3.20 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (3.3.20)
+Requirement already satisfied: nvidia-nvtx-cu12==12.8.90 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (12.8.90)
+Requirement already satisfied: nvidia-nvjitlink-cu12==12.8.93 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (12.8.93)
+Requirement already satisfied: nvidia-cufile-cu12==1.13.1.3 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (1.13.1.3)
+Requirement already satisfied: triton==3.5.0 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (3.5.0)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from sympy>=1.13.3->torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (1.3.0)
+Requirement already satisfied: zipp>=3.20 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from importlib_metadata->diffusers->-r web-stable-diffusion/requirements.txt (line 2)) (3.23.0)
+Requirement already satisfied: MarkupSafe>=2.0 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from jinja2->torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (3.0.3)
+Requirement already satisfied: charset_normalizer<4,>=2 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from requests->diffusers->-r web-stable-diffusion/requirements.txt (line 2)) (3.4.4)
+Requirement already satisfied: idna<4,>=2.5 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from requests->diffusers->-r web-stable-diffusion/requirements.txt (line 2)) (3.11)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from requests->diffusers->-r web-stable-diffusion/requirements.txt (line 2)) (2.5.0)
+Requirement already satisfied: certifi>=2017.4.17 in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from requests->diffusers->-r web-stable-diffusion/requirements.txt (line 2)) (2025.10.5)
++ '[' '!' -d tvm ']'
++ pushd tvm
++ git fetch --all --tags
++ git checkout v0.21.0
+HEAD is now at 68bb125de [release] Update version to 0.21.0 on main branch
+M	3rdparty/cutlass
+M	3rdparty/cutlass_fpA_intB_gemm
++ mkdir -p build
++ cd build
++ command -v ninja
++ command -v sudo
++ sudo -n true
++ sudo apt update
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Ign:1 https://apt.llvm.org/plucky llvm-toolchain-plucky-16 InRelease
+Hit:2 http://security.ubuntu.com/ubuntu plucky-security InRelease
+Err:3 https://apt.llvm.org/plucky llvm-toolchain-plucky-16 Release
+  404  Not Found [IP: 199.232.194.49 443]
+Hit:4 http://archive.ubuntu.com/ubuntu plucky InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu plucky-updates InRelease
+Hit:6 http://archive.ubuntu.com/ubuntu plucky-backports InRelease
+Reading package lists...
+Error: The repository 'http://apt.llvm.org/plucky llvm-toolchain-plucky-16 Release' does not have a Release file.
++ true
++ sudo apt install -y ninja-build
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Installing:
+  ninja-build
+
+Summary:
+  Upgrading: 0, Installing: 1, Removing: 0, Not Upgrading: 0
+  Download size: 149 kB
+  Space needed: 414 kB / 107 GB available
+
+Get:1 http://archive.ubuntu.com/ubuntu plucky/universe amd64 ninja-build amd64 1.12.1-1 [149 kB]
+debconf: unable to initialize frontend: Dialog
+debconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+dpkg-preconfigure: unable to re-open stdin: 
+Fetched 149 kB in 1s (289 kB/s)
+Selecting previously unselected package ninja-build.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 62797 files and directories currently installed.)
+Preparing to unpack .../ninja-build_1.12.1-1_amd64.deb ...
+Unpacking ninja-build (1.12.1-1) ...
+Setting up ninja-build (1.12.1-1) ...
+Processing triggers for man-db (2.13.0-1) ...
++ command -v gcc
++ command -v g++
+++ which gcc
++ export CC=/usr/bin/gcc
++ CC=/usr/bin/gcc
+++ which g++
++ export CXX=/usr/bin/g++
++ CXX=/usr/bin/g++
++ CONFIG_OK=0
+++ which llvm-config
++ cmake -S .. -B . -G Ninja -DUSE_LLVM=ON -DLLVM_CONFIG_EXECUTABLE=/usr/bin/llvm-config -DUSE_RPC=OFF -DUSE_CUDA=OFF -DUSE_METAL=OFF -DUSE_WEBGPU=ON -DUSE_EMSCRIPTEN=ON -DCMAKE_BUILD_TYPE=Release
+-- The C compiler identification is GNU 14.2.0
+-- The CXX compiler identification is GNU 14.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/gcc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/g++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Forbidding undefined symbols in shared library, using -Wl,--no-undefined on platform Linux
+-- Could NOT find GTest (missing: GTEST_LIBRARY GTEST_INCLUDE_DIR GTEST_MAIN_LIBRARY) 
+-- Didn't find the path to CCACHE, disabling ccache
+-- Performing Test HAVE_FFI_CALL
+-- Performing Test HAVE_FFI_CALL - Success
+-- Found FFI: /usr/lib/x86_64-linux-gnu/libffi.so
+-- Could NOT find LibEdit (missing: LibEdit_INCLUDE_DIRS LibEdit_LIBRARIES) 
+-- Found ZLIB: /usr/lib/x86_64-linux-gnu/libz.so (found version "1.3.1")
+-- Could NOT find zstd (missing: zstd_LIBRARY zstd_INCLUDE_DIR) 
+-- Found LibXml2: /usr/lib/x86_64-linux-gnu/libxml2.so (found version "2.9.14")
+-- Could NOT find CURL (missing: CURL_LIBRARY CURL_INCLUDE_DIR) 
+-- Not found - LLVM_LIBS
+-- Fall back to using llvm-config
+-- Use llvm-config=/usr/lib/llvm-20/bin/llvm-config
+-- LLVM libdir: /usr/lib/llvm-20/lib
+-- LLVM cmakedir: /usr/lib/llvm-20/lib/cmake/llvm
+-- Found LLVM_INCLUDE_DIRS=/usr/lib/llvm-20/include
+-- Found LLVM_DEFINITIONS=-D_GNU_SOURCE;-D__STDC_CONSTANT_MACROS;-D__STDC_FORMAT_MACROS;-D__STDC_LIMIT_MACROS
+-- Found LLVM_LIBS=/usr/lib/llvm-20/lib/libLLVM-20.so
+-- Found TVM_LLVM_VERSION=201
+-- Found TVM_LLVM_HAS_AARCH64_TARGET=1
+-- Build with LLVM 20.1.2
+-- Set TVM_LLVM_VERSION=201
+-- Build with contrib.random
+-- Build with contrib.sort
+-- Git found: /usr/bin/git
+-- Found TVM_GIT_COMMIT_HASH=68bb125ded265abf1ce46843979feae085fed03d
+-- Found TVM_GIT_COMMIT_TIME=2025-07-07 22:48:21 +0800
+-- CMAKC_C_COMPILER="/usr/bin/gcc"
+CMake Error at /usr/share/cmake-3.31/Modules/ExternalProject/shared_internal_commands.cmake:1323 (message):
+  No download info given for 'project_libbacktrace' and its source directory:
+
+   /workspace/tvm/ffi/cmake/Utils/../../../3rdparty/libbacktrace
+
+  is not an existing non-empty directory.  Please specify one of:
+
+   * SOURCE_DIR with an existing non-empty directory
+   * DOWNLOAD_COMMAND
+   * URL
+   * GIT_REPOSITORY
+   * SVN_REPOSITORY
+   * HG_REPOSITORY
+   * CVS_REPOSITORY and CVS_MODULE
+Call Stack (most recent call first):
+  /usr/share/cmake-3.31/Modules/ExternalProject.cmake:3041 (_ep_add_download_command)
+  ffi/cmake/Utils/AddLibbacktrace.cmake:34 (ExternalProject_Add)
+  ffi/cmake/Utils/AddLibbacktrace.cmake:66 (_libbacktrace_compile)
+  ffi/CMakeLists.txt:35 (include)
+
+
+-- Configuring incomplete, errors occurred!
++ CONFIG_OK=1
++ '[' 1 -ne 0 ']'
++ echo 'CMake configure failed; attempting to ensure ninja is installed and retry once.'
+CMake configure failed; attempting to ensure ninja is installed and retry once.
++ command -v sudo
++ sudo -n true
++ sudo apt install -y ninja-build
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+ninja-build is already the newest version (1.12.1-1).
+Summary:
+  Upgrading: 0, Installing: 0, Removing: 0, Not Upgrading: 0
+++ which llvm-config
++ cmake -S .. -B . -G Ninja -DUSE_LLVM=ON -DLLVM_CONFIG_EXECUTABLE=/usr/bin/llvm-config -DUSE_RPC=OFF -DUSE_CUDA=OFF -DUSE_METAL=OFF -DUSE_WEBGPU=ON -DUSE_EMSCRIPTEN=ON -DCMAKE_BUILD_TYPE=Release
+-- Forbidding undefined symbols in shared library, using -Wl,--no-undefined on platform Linux
+-- Could NOT find GTest (missing: GTEST_LIBRARY GTEST_INCLUDE_DIR GTEST_MAIN_LIBRARY) 
+-- Didn't find the path to CCACHE, disabling ccache
+-- Could NOT find LibEdit (missing: LibEdit_INCLUDE_DIRS LibEdit_LIBRARIES) 
+-- Could NOT find zstd (missing: zstd_LIBRARY zstd_INCLUDE_DIR) 
+-- Could NOT find CURL (missing: CURL_LIBRARY CURL_INCLUDE_DIR) 
+-- Not found - LLVM_LIBS
+-- Fall back to using llvm-config
+-- Use llvm-config=/usr/lib/llvm-20/bin/llvm-config
+-- LLVM libdir: /usr/lib/llvm-20/lib
+-- LLVM cmakedir: /usr/lib/llvm-20/lib/cmake/llvm
+-- Found LLVM_INCLUDE_DIRS=/usr/lib/llvm-20/include
+-- Found LLVM_DEFINITIONS=-D_GNU_SOURCE;-D__STDC_CONSTANT_MACROS;-D__STDC_FORMAT_MACROS;-D__STDC_LIMIT_MACROS
+-- Found LLVM_LIBS=/usr/lib/llvm-20/lib/libLLVM-20.so
+-- Found TVM_LLVM_VERSION=201
+-- Found TVM_LLVM_HAS_AARCH64_TARGET=1
+-- Build with LLVM 20.1.2
+-- Set TVM_LLVM_VERSION=201
+-- Build with contrib.random
+-- Build with contrib.sort
+-- Git found: /usr/bin/git
+-- Found TVM_GIT_COMMIT_HASH=68bb125ded265abf1ce46843979feae085fed03d
+-- Found TVM_GIT_COMMIT_TIME=2025-07-07 22:48:21 +0800
+-- CMAKC_C_COMPILER="/usr/bin/gcc"
+CMake Error at /usr/share/cmake-3.31/Modules/ExternalProject/shared_internal_commands.cmake:1323 (message):
+  No download info given for 'project_libbacktrace' and its source directory:
+
+   /workspace/tvm/ffi/cmake/Utils/../../../3rdparty/libbacktrace
+
+  is not an existing non-empty directory.  Please specify one of:
+
+   * SOURCE_DIR with an existing non-empty directory
+   * DOWNLOAD_COMMAND
+   * URL
+   * GIT_REPOSITORY
+   * SVN_REPOSITORY
+   * HG_REPOSITORY
+   * CVS_REPOSITORY and CVS_MODULE
+Call Stack (most recent call first):
+  /usr/share/cmake-3.31/Modules/ExternalProject.cmake:3041 (_ep_add_download_command)
+  ffi/cmake/Utils/AddLibbacktrace.cmake:34 (ExternalProject_Add)
+  ffi/cmake/Utils/AddLibbacktrace.cmake:66 (_libbacktrace_compile)
+  ffi/CMakeLists.txt:35 (include)
+
+
+-- Configuring incomplete, errors occurred!
++ true
++ '[' 1 -eq 1 ']'
+++ nproc
++ cmake --build . -j4
+ninja: error: loading 'build.ninja': No such file or directory
++ true
++ popd
++ '[' -d tvm/python ']'
++ python -m pip install -e tvm/python
+Obtaining file:///workspace/tvm/python
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'error'
+  error: subprocess-exited-with-error
+  
+  × Getting requirements to build editable did not run successfully.
+  │ exit code: 1
+  ╰─> [71 lines of output]
+      Traceback (most recent call last):
+        File "/home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 389, in <module>
+          main()
+          ~~~~^^
+        File "/home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 373, in main
+          json_out["return_val"] = hook(**hook_input["kwargs"])
+                                   ~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 157, in get_requires_for_build_editable
+          return hook(config_settings)
+        File "/tmp/pip-build-env-2gyw2b_1/overlay/lib/python3.13/site-packages/setuptools/build_meta.py", line 473, in get_requires_for_build_editable
+          return self.get_requires_for_build_wheel(config_settings)
+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+        File "/tmp/pip-build-env-2gyw2b_1/overlay/lib/python3.13/site-packages/setuptools/build_meta.py", line 331, in get_requires_for_build_wheel
+          return self._get_build_requires(config_settings, requirements=[])
+                 ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/tmp/pip-build-env-2gyw2b_1/overlay/lib/python3.13/site-packages/setuptools/build_meta.py", line 301, in _get_build_requires
+          self.run_setup()
+          ~~~~~~~~~~~~~~^^
+        File "/tmp/pip-build-env-2gyw2b_1/overlay/lib/python3.13/site-packages/setuptools/build_meta.py", line 317, in run_setup
+          exec(code, locals())
+          ~~~~^^^^^^^^^^^^^^^^
+        File "<string>", line 130, in <module>
+        File "<string>", line 51, in get_lib_path
+        File "/workspace/tvm/python/./tvm/libinfo.py", line 176, in find_lib_path
+          raise RuntimeError(message)
+      RuntimeError: Cannot find libraries: ['libtvm.so', 'libtvm_runtime.so', '3rdparty/cutlass_fpA_intB_gemm/cutlass_kernels/libfpA_intB_gemm.so', '3rdparty/libflash_attn/src/libflash_attn.so']
+      List of candidates:
+      /tmp/pip-build-env-2gyw2b_1/overlay/bin/libtvm.so
+      /home/ubuntu/.pyenv/versions/3.13.0/envs/websd-venv-3.13/bin/libtvm.so
+      /home/ubuntu/.pyenv/libexec/libtvm.so
+      /home/ubuntu/.pyenv/plugins/python-build/bin/libtvm.so
+      /home/ubuntu/.pyenv/plugins/pyenv-virtualenv/bin/libtvm.so
+      /home/ubuntu/.pyenv/plugins/pyenv-update/bin/libtvm.so
+      /home/ubuntu/.pyenv/plugins/pyenv-doctor/bin/libtvm.so
+      /home/ubuntu/.pyenv/plugins/pyenv-virtualenv/shims/libtvm.so
+      /home/ubuntu/.pyenv/shims/libtvm.so
+      /home/ubuntu/.pyenv/bin/libtvm.so
+      /home/ubuntu/emsdk/libtvm.so
+      /home/ubuntu/emsdk/upstream/emscripten/libtvm.so
+      /usr/local/cargo/bin/libtvm.so
+      /home/ubuntu/.nvm/versions/node/v22.20.0/bin/libtvm.so
+      /usr/local/sbin/libtvm.so
+      /usr/local/bin/libtvm.so
+      /usr/sbin/libtvm.so
+      /usr/bin/libtvm.so
+      /usr/sbin/libtvm.so
+      /usr/bin/libtvm.so
+      /workspace/tvm/build/libtvm.so
+      /workspace/libtvm.so
+      /tmp/pip-build-env-2gyw2b_1/overlay/bin/libtvm_runtime.so
+      /home/ubuntu/.pyenv/versions/3.13.0/envs/websd-venv-3.13/bin/libtvm_runtime.so
+      /home/ubuntu/.pyenv/libexec/libtvm_runtime.so
+      /home/ubuntu/.pyenv/plugins/python-build/bin/libtvm_runtime.so
+      /home/ubuntu/.pyenv/plugins/pyenv-virtualenv/bin/libtvm_runtime.so
+      /home/ubuntu/.pyenv/plugins/pyenv-update/bin/libtvm_runtime.so
+      /home/ubuntu/.pyenv/plugins/pyenv-doctor/bin/libtvm_runtime.so
+      /home/ubuntu/.pyenv/plugins/pyenv-virtualenv/shims/libtvm_runtime.so
+      /home/ubuntu/.pyenv/shims/libtvm_runtime.so
+      /home/ubuntu/.pyenv/bin/libtvm_runtime.so
+      /home/ubuntu/emsdk/libtvm_runtime.so
+      /home/ubuntu/emsdk/upstream/emscripten/libtvm_runtime.so
+      /usr/local/cargo/bin/libtvm_runtime.so
+      /home/ubuntu/.nvm/versions/node/v22.20.0/bin/libtvm_runtime.so
+      /usr/local/sbin/libtvm_runtime.so
+      /usr/local/bin/libtvm_runtime.so
+      /usr/sbin/libtvm_runtime.so
+      /usr/bin/libtvm_runtime.so
+      /usr/sbin/libtvm_runtime.so
+      /usr/bin/libtvm_runtime.so
+      /workspace/tvm/build/libtvm_runtime.so
+      /workspace/libtvm_runtime.so
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+error: subprocess-exited-with-error
+
+× Getting requirements to build editable did not run successfully.
+│ exit code: 1
+╰─> See above for output.
+
+note: This error originates from a subprocess, and is likely not a problem with pip.
++ true
++ source /home/ubuntu/emsdk/emsdk_env.sh
+++ CURRENT_SCRIPT=
+++ DIR=.
+++ '[' -n /home/ubuntu/emsdk/emsdk_env.sh ']'
+++ CURRENT_SCRIPT=/home/ubuntu/emsdk/emsdk_env.sh
+++ '[' -n /home/ubuntu/emsdk/emsdk_env.sh ']'
++++ dirname /home/ubuntu/emsdk/emsdk_env.sh
+++ DIR=/home/ubuntu/emsdk
+++ '[' -h /home/ubuntu/emsdk/emsdk_env.sh ']'
+++ unset CURRENT_SCRIPT
+++ '[' '!' -f /home/ubuntu/emsdk/emsdk.py ']'
++++ EMSDK_BASH=1
++++ /home/ubuntu/emsdk/emsdk construct_env
+Setting up EMSDK environment (suppress these messages with EMSDK_QUIET=1)
+Setting environment variables:
+PATH = /home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/home/ubuntu/.pyenv/versions/websd-venv-3.13/bin:/home/ubuntu/.pyenv/libexec:/home/ubuntu/.pyenv/plugins/python-build/bin:/home/ubuntu/.pyenv/plugins/pyenv-virtualenv/bin:/home/ubuntu/.pyenv/plugins/pyenv-update/bin:/home/ubuntu/.pyenv/plugins/pyenv-doctor/bin:/home/ubuntu/.pyenv/plugins/pyenv-virtualenv/shims:/home/ubuntu/.pyenv/shims:/home/ubuntu/.pyenv/bin:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ eval export 'PATH="/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/home/ubuntu/.pyenv/versions/websd-venv-3.13/bin:/home/ubuntu/.pyenv/libexec:/home/ubuntu/.pyenv/plugins/python-build/bin:/home/ubuntu/.pyenv/plugins/pyenv-virtualenv/bin:/home/ubuntu/.pyenv/plugins/pyenv-update/bin:/home/ubuntu/.pyenv/plugins/pyenv-doctor/bin:/home/ubuntu/.pyenv/plugins/pyenv-virtualenv/shims:/home/ubuntu/.pyenv/shims:/home/ubuntu/.pyenv/bin:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";'
++++ export PATH=/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/home/ubuntu/.pyenv/versions/websd-venv-3.13/bin:/home/ubuntu/.pyenv/libexec:/home/ubuntu/.pyenv/plugins/python-build/bin:/home/ubuntu/.pyenv/plugins/pyenv-virtualenv/bin:/home/ubuntu/.pyenv/plugins/pyenv-update/bin:/home/ubuntu/.pyenv/plugins/pyenv-doctor/bin:/home/ubuntu/.pyenv/plugins/pyenv-virtualenv/shims:/home/ubuntu/.pyenv/shims:/home/ubuntu/.pyenv/bin:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/home/ubuntu/.pyenv/versions/websd-venv-3.13/bin:/home/ubuntu/.pyenv/libexec:/home/ubuntu/.pyenv/plugins/python-build/bin:/home/ubuntu/.pyenv/plugins/pyenv-virtualenv/bin:/home/ubuntu/.pyenv/plugins/pyenv-update/bin:/home/ubuntu/.pyenv/plugins/pyenv-doctor/bin:/home/ubuntu/.pyenv/plugins/pyenv-virtualenv/shims:/home/ubuntu/.pyenv/shims:/home/ubuntu/.pyenv/bin:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ unset DIR
++ '[' -f web-stable-diffusion/build.py ']'
++ python web-stable-diffusion/build.py --target webgpu --artifact-path dist --db-path log_db --use-cache=0
+Traceback (most recent call last):
+  File "/workspace/web-stable-diffusion/build.py", line 6, in <module>
+    import web_stable_diffusion.trace as trace
+  File "/workspace/web-stable-diffusion/web_stable_diffusion/__init__.py", line 1, in <module>
+    from . import runtime
+  File "/workspace/web-stable-diffusion/web_stable_diffusion/runtime/__init__.py", line 1, in <module>
+    from .scheduler_runtime import *
+  File "/workspace/web-stable-diffusion/web_stable_diffusion/runtime/scheduler_runtime.py", line 6, in <module>
+    import tvm
+ModuleNotFoundError: No module named 'tvm'
++ true
++ '[' -f web-stable-diffusion/deploy.py ']'
++ python web-stable-diffusion/deploy.py --device-name webgpu --artifact-path dist --prompt 'smoke test'
+Traceback (most recent call last):
+  File "/workspace/web-stable-diffusion/deploy.py", line 9, in <module>
+    import web_stable_diffusion.utils as utils
+  File "/workspace/web-stable-diffusion/web_stable_diffusion/__init__.py", line 1, in <module>
+    from . import runtime
+  File "/workspace/web-stable-diffusion/web_stable_diffusion/runtime/__init__.py", line 1, in <module>
+    from .scheduler_runtime import *
+  File "/workspace/web-stable-diffusion/web_stable_diffusion/runtime/scheduler_runtime.py", line 6, in <module>
+    import tvm
+ModuleNotFoundError: No module named 'tvm'
++ true
++ '[' -x web-stable-diffusion/scripts/build_site.sh ']'
++ web-stable-diffusion/scripts/build_site.sh web/local-config.json
++ [[ ! -f web/local-config.json ]]
++ echo 'cannot find config' web/local-config.json
+cannot find config web/local-config.json
++ rm -rf site/dist
++ mkdir -p site/dist site/_inlcudes
++ echo 'Copy local configurations..'
+Copy local configurations..
++ cp web/local-config.json site/stable-diffusion-config.json
+cp: cannot stat 'web/local-config.json': No such file or directory
++ true
++ '[' -x web-stable-diffusion/scripts/local_deploy_site.sh ']'
++ web-stable-diffusion/scripts/local_deploy_site.sh
++ scripts/build_site.sh web/local-config.json
+web-stable-diffusion/scripts/local_deploy_site.sh: line 4: scripts/build_site.sh: No such file or directory
++ true
++ echo 'Smoke build script completed. Logs are in /workspace/logs/websd_build'
+Smoke build script completed. Logs are in /workspace/logs/websd_build

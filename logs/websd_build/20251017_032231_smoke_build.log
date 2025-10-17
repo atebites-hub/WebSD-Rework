@@ -1,0 +1,618 @@
++ echo 'Starting Web Stable Diffusion smoke build'
+Starting Web Stable Diffusion smoke build
++ command -v sudo
++ sudo -n true
++ sudo apt update
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Ign:1 https://apt.llvm.org/plucky llvm-toolchain-plucky-16 InRelease
+Err:2 https://apt.llvm.org/plucky llvm-toolchain-plucky-16 Release
+  404  Not Found [IP: 199.232.194.49 443]
+Hit:3 http://security.ubuntu.com/ubuntu plucky-security InRelease
+Hit:4 http://archive.ubuntu.com/ubuntu plucky InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu plucky-updates InRelease
+Hit:6 http://archive.ubuntu.com/ubuntu plucky-backports InRelease
+Reading package lists...
+Error: The repository 'http://apt.llvm.org/plucky llvm-toolchain-plucky-16 Release' does not have a Release file.
++ set +e
++ sudo apt install -y build-essential git cmake ninja-build pkg-config python3-pip curl wget unzip ca-certificates libtinfo-dev libedit-dev libssl-dev libbz2-dev libreadline-dev libsqlite3-dev zlib1g-dev libffi-dev liblzma-dev libncursesw5-dev libgdbm-dev llvm-16 llvm-16-dev llvm-16-tools
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Error: Unable to locate package llvm-16
+Error: Unable to locate package llvm-16-dev
+Error: Unable to locate package llvm-16-tools
++ INSTALL_EXIT=100
++ set -e
++ '[' 100 -ne 0 ']'
++ echo 'llvm-16 packages not found via apt; attempting to add LLVM apt repo and retry'
+llvm-16 packages not found via apt; attempting to add LLVM apt repo and retry
++ sudo apt install -y gnupg ca-certificates lsb-release
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+gnupg is already the newest version (2.4.4-2ubuntu23.1).
+ca-certificates is already the newest version (20241223).
+lsb-release is already the newest version (12.1-1).
+Summary:
+  Upgrading: 0, Installing: 0, Removing: 0, Not Upgrading: 0
+++ lsb_release -sc
++ CODENAME=plucky
++ sudo mkdir -p /etc/apt/keyrings
++ sudo gpg --dearmor -o /etc/apt/keyrings/llvm-archive-keyring.gpg
++ wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key
+gpg: cannot open '/dev/tty': No such device or address
++ true
++ echo 'deb [signed-by=/etc/apt/keyrings/llvm-archive-keyring.gpg] http://apt.llvm.org/plucky/ llvm-toolchain-plucky-16 main'
++ sudo tee /etc/apt/sources.list.d/llvm.list
+deb [signed-by=/etc/apt/keyrings/llvm-archive-keyring.gpg] http://apt.llvm.org/plucky/ llvm-toolchain-plucky-16 main
++ sudo apt update
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Ign:1 https://apt.llvm.org/plucky llvm-toolchain-plucky-16 InRelease
+Err:2 https://apt.llvm.org/plucky llvm-toolchain-plucky-16 Release
+  404  Not Found [IP: 199.232.198.49 443]
+Hit:3 http://archive.ubuntu.com/ubuntu plucky InRelease
+Hit:4 http://security.ubuntu.com/ubuntu plucky-security InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu plucky-updates InRelease
+Hit:6 http://archive.ubuntu.com/ubuntu plucky-backports InRelease
+Reading package lists...
+Error: The repository 'http://apt.llvm.org/plucky llvm-toolchain-plucky-16 Release' does not have a Release file.
++ true
++ sudo apt install -y llvm-16 llvm-16-dev llvm-16-tools
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Error: Unable to locate package llvm-16
+Error: Unable to locate package llvm-16-dev
+Error: Unable to locate package llvm-16-tools
++ echo 'Failed to install llvm-16 from the LLVM apt repo; falling back to distro llvm/clang packages'
+Failed to install llvm-16 from the LLVM apt repo; falling back to distro llvm/clang packages
++ sudo apt install -y llvm clang
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+llvm is already the newest version (1:20.0-63ubuntu1).
+clang is already the newest version (1:20.0-63ubuntu1).
+Summary:
+  Upgrading: 0, Installing: 0, Removing: 0, Not Upgrading: 0
++ command -v sudo
++ sudo -n true
++ sudo apt install -y libbz2-dev libssl-dev libreadline-dev libsqlite3-dev zlib1g-dev libffi-dev liblzma-dev libncursesw5-dev tk-dev
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+libbz2-dev is already the newest version (1.0.8-6).
+libssl-dev is already the newest version (3.4.1-1ubuntu4).
+libreadline-dev is already the newest version (8.2-6).
+libsqlite3-dev is already the newest version (3.46.1-3ubuntu0.3).
+zlib1g-dev is already the newest version (1:1.3.dfsg+really1.3.1-1ubuntu1).
+libffi-dev is already the newest version (3.4.7-1).
+liblzma-dev is already the newest version (5.6.4-1ubuntu1).
+libncurses-dev is already the newest version (6.5+20250216-2).
+tk-dev is already the newest version (8.6.14build1).
+Summary:
+  Upgrading: 0, Installing: 0, Removing: 0, Not Upgrading: 0
++ curl -fsSL https://deb.nodesource.com/setup_18.x
++ sudo -E bash -
+[38;5;79m2025-10-17 03:22:37 - Installing pre-requisites[0m
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Ign:1 https://apt.llvm.org/plucky llvm-toolchain-plucky-16 InRelease
+Err:2 https://apt.llvm.org/plucky llvm-toolchain-plucky-16 Release
+  404  Not Found [IP: 199.232.194.49 443]
+Hit:3 http://archive.ubuntu.com/ubuntu plucky InRelease
+Hit:4 http://security.ubuntu.com/ubuntu plucky-security InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu plucky-updates InRelease
+Hit:6 http://archive.ubuntu.com/ubuntu plucky-backports InRelease
+Reading package lists...
+Error: The repository 'http://apt.llvm.org/plucky llvm-toolchain-plucky-16 Release' does not have a Release file.
+[1;31m2025-10-17 03:22:37 - Error: Failed to run 'apt update' (Exit Code: 0)[0m
++ sudo apt install -y nodejs
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+nodejs is already the newest version (20.18.1+dfsg-1ubuntu2).
+Summary:
+  Upgrading: 0, Installing: 0, Removing: 0, Not Upgrading: 0
++ '[' '!' -d /home/ubuntu/emsdk ']'
++ echo 'emsdk already present at /home/ubuntu/emsdk'
+emsdk already present at /home/ubuntu/emsdk
++ source /home/ubuntu/emsdk/emsdk_env.sh
+++ CURRENT_SCRIPT=
+++ DIR=.
+++ '[' -n /home/ubuntu/emsdk/emsdk_env.sh ']'
+++ CURRENT_SCRIPT=/home/ubuntu/emsdk/emsdk_env.sh
+++ '[' -n /home/ubuntu/emsdk/emsdk_env.sh ']'
++++ dirname /home/ubuntu/emsdk/emsdk_env.sh
+++ DIR=/home/ubuntu/emsdk
+++ '[' -h /home/ubuntu/emsdk/emsdk_env.sh ']'
+++ unset CURRENT_SCRIPT
+++ '[' '!' -f /home/ubuntu/emsdk/emsdk.py ']'
++++ EMSDK_BASH=1
++++ /home/ubuntu/emsdk/emsdk construct_env
+Setting up EMSDK environment (suppress these messages with EMSDK_QUIET=1)
+Adding directories to PATH:
+PATH += /home/ubuntu/emsdk
+PATH += /home/ubuntu/emsdk/upstream/emscripten
+
+Setting environment variables:
+PATH = /home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+EMSDK = /home/ubuntu/emsdk
+EMSDK_NODE = /home/ubuntu/emsdk/node/22.16.0_64bit/bin/node
+++ eval export 'PATH="/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";' export 'EMSDK="/home/ubuntu/emsdk";' export 'EMSDK_NODE="/home/ubuntu/emsdk/node/22.16.0_64bit/bin/node";'
++++ export PATH=/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export EMSDK=/home/ubuntu/emsdk
++++ EMSDK=/home/ubuntu/emsdk
++++ export EMSDK_NODE=/home/ubuntu/emsdk/node/22.16.0_64bit/bin/node
++++ EMSDK_NODE=/home/ubuntu/emsdk/node/22.16.0_64bit/bin/node
+++ unset DIR
++ '[' -d /home/ubuntu/.pyenv ']'
++ echo 'pyenv directory exists at /home/ubuntu/.pyenv; initializing without re-running installer'
+pyenv directory exists at /home/ubuntu/.pyenv; initializing without re-running installer
++ export PATH=/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++ PATH=/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ pyenv init -
++ eval 'PATH="$(bash --norc -ec '\''IFS=:; paths=($PATH); 
+for i in ${!paths[@]}; do 
+if [[ ${paths[i]} == "'\'''\''/home/ubuntu/.pyenv/shims'\'''\''" ]]; then unset '\''\'\'''\''paths[i]'\''\'\'''\''; 
+fi; done; 
+echo "${paths[*]}"'\'')"
+export PATH="/home/ubuntu/.pyenv/shims:${PATH}"
+export PYENV_SHELL=bash
+source '\''/home/ubuntu/.pyenv/completions/pyenv.bash'\''
+command pyenv rehash 2>/dev/null
+pyenv() {
+  local command=${1:-}
+  [ "$#" -gt 0 ] && shift
+  case "$command" in
+  activate|deactivate|rehash|shell)
+    eval "$(pyenv "sh-$command" "$@")"
+    ;;
+  *)
+    command pyenv "$command" "$@"
+    ;;
+  esac
+}'
++++ bash --norc -ec 'IFS=:; paths=($PATH); 
+for i in ${!paths[@]}; do 
+if [[ ${paths[i]} == "/home/ubuntu/.pyenv/shims" ]]; then unset '\''paths[i]'\''; 
+fi; done; 
+echo "${paths[*]}"'
+++ PATH=/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export PATH=/home/ubuntu/.pyenv/shims:/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/home/ubuntu/.pyenv/shims:/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export PYENV_SHELL=bash
+++ PYENV_SHELL=bash
+++ source /home/ubuntu/.pyenv/completions/pyenv.bash
++++ complete -F _pyenv pyenv
+++ command pyenv rehash
+++ pyenv virtualenv-init -
+++ local command=virtualenv-init
+++ '[' 2 -gt 0 ']'
+++ shift
+++ case "$command" in
+++ command pyenv virtualenv-init -
++ eval 'export PATH="/home/ubuntu/.pyenv/plugins/pyenv-virtualenv/shims:${PATH}";
+export PYENV_VIRTUALENV_INIT=1;
+_pyenv_virtualenv_hook() {
+  local ret=$?
+  if [ -n "${VIRTUAL_ENV-}" ]; then
+    eval "$(pyenv sh-activate --quiet || pyenv sh-deactivate --quiet || true)" || true
+  else
+    eval "$(pyenv sh-activate --quiet || true)" || true
+  fi
+  return $ret
+};
+if ! [[ "${PROMPT_COMMAND-}" =~ _pyenv_virtualenv_hook ]]; then
+  PROMPT_COMMAND="_pyenv_virtualenv_hook;${PROMPT_COMMAND-}"
+fi'
+++ export PATH=/home/ubuntu/.pyenv/plugins/pyenv-virtualenv/shims:/home/ubuntu/.pyenv/shims:/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/home/ubuntu/.pyenv/plugins/pyenv-virtualenv/shims:/home/ubuntu/.pyenv/shims:/home/ubuntu/.pyenv/bin:/home/ubuntu/emsdk:/home/ubuntu/emsdk/upstream/emscripten:/usr/local/cargo/bin:/home/ubuntu/.nvm/versions/node/v22.20.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export PYENV_VIRTUALENV_INIT=1
+++ PYENV_VIRTUALENV_INIT=1
+++ [[ '' =~ _pyenv_virtualenv_hook ]]
+++ PROMPT_COMMAND='_pyenv_virtualenv_hook;'
++ '[' 1 -eq 1 ']'
++ pyenv versions --bare
++ local command=versions
++ grep -qx '^3.13.0$'
++ '[' 2 -gt 0 ']'
++ shift
++ case "$command" in
++ command pyenv versions --bare
++ pyenv install -s 3.13.0
++ local command=install
++ '[' 3 -gt 0 ']'
++ shift
++ case "$command" in
++ command pyenv install -s 3.13.0
+Downloading Python-3.13.0.tar.xz...
+-> https://www.python.org/ftp/python/3.13.0/Python-3.13.0.tar.xz
+Installing Python-3.13.0...
+Installed Python-3.13.0 to /home/ubuntu/.pyenv/versions/3.13.0
++ pyenv versions --bare
++ local command=versions
++ '[' 2 -gt 0 ']'
++ shift
++ case "$command" in
++ grep -qx '^3.13.0$'
++ command pyenv versions --bare
++ pyenv virtualenv -f 3.13.0 websd-venv-3.13
++ local command=virtualenv
++ '[' 4 -gt 0 ']'
++ shift
++ case "$command" in
++ command pyenv virtualenv -f 3.13.0 websd-venv-3.13
++ pyenv activate websd-venv-3.13
++ local command=activate
++ '[' 2 -gt 0 ']'
++ shift
++ case "$command" in
+++ pyenv sh-activate websd-venv-3.13
+++ local command=sh-activate
+++ '[' 2 -gt 0 ']'
+++ shift
+++ case "$command" in
+++ command pyenv sh-activate websd-venv-3.13
++ eval 'unset PYENV_VIRTUAL_ENV;
+unset VIRTUAL_ENV;
+if [ -n "${_OLD_VIRTUAL_PATH:-}" ]; then
+  export PATH="${_OLD_VIRTUAL_PATH}";
+  unset _OLD_VIRTUAL_PATH;
+fi;
+if [ -n "${_OLD_VIRTUAL_PYTHONHOME:-}" ]; then
+  export PYTHONHOME="${_OLD_VIRTUAL_PYTHONHOME}";
+  unset _OLD_VIRTUAL_PYTHONHOME;
+fi;
+if [ -n "${_OLD_VIRTUAL_PS1:-}" ]; then
+  export PS1="${_OLD_VIRTUAL_PS1}";
+  unset _OLD_VIRTUAL_PS1;
+fi;
+if declare -f deactivate 1>/dev/null 2>&1; then
+  unset -f deactivate;
+fi;
+export PYENV_VERSION="websd-venv-3.13";
+export PYENV_ACTIVATE_SHELL=1;
+export PYENV_VIRTUAL_ENV="/home/ubuntu/.pyenv/versions/3.13.0/envs/websd-venv-3.13";
+export VIRTUAL_ENV="/home/ubuntu/.pyenv/versions/3.13.0/envs/websd-venv-3.13";
+export _OLD_VIRTUAL_PS1="${PS1:-}";
+export PS1="(websd-venv-3.13) ${PS1:-}";'
+++ unset PYENV_VIRTUAL_ENV
+++ unset VIRTUAL_ENV
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ declare -f deactivate
+++ export PYENV_VERSION=websd-venv-3.13
+++ PYENV_VERSION=websd-venv-3.13
+++ export PYENV_ACTIVATE_SHELL=1
+++ PYENV_ACTIVATE_SHELL=1
+++ export PYENV_VIRTUAL_ENV=/home/ubuntu/.pyenv/versions/3.13.0/envs/websd-venv-3.13
+++ PYENV_VIRTUAL_ENV=/home/ubuntu/.pyenv/versions/3.13.0/envs/websd-venv-3.13
+++ export VIRTUAL_ENV=/home/ubuntu/.pyenv/versions/3.13.0/envs/websd-venv-3.13
+++ VIRTUAL_ENV=/home/ubuntu/.pyenv/versions/3.13.0/envs/websd-venv-3.13
+++ export _OLD_VIRTUAL_PS1=
+++ _OLD_VIRTUAL_PS1=
+++ export 'PS1=(websd-venv-3.13) '
+++ PS1='(websd-venv-3.13) '
++ command -v python
++ PYTHON_BIN=python
++ python -m pip install --upgrade pip setuptools wheel
+Requirement already satisfied: pip in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (24.2)
+Collecting pip
+  Downloading pip-25.2-py3-none-any.whl.metadata (4.7 kB)
+Collecting setuptools
+  Downloading setuptools-80.9.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting wheel
+  Downloading wheel-0.45.1-py3-none-any.whl.metadata (2.3 kB)
+Downloading pip-25.2-py3-none-any.whl (1.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 123.6 MB/s eta 0:00:00
+
+Downloading setuptools-80.9.0-py3-none-any.whl (1.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 15.5 MB/s eta 0:00:00
+
+Downloading wheel-0.45.1-py3-none-any.whl (72 kB)
+Installing collected packages: wheel, setuptools, pip
+  Attempting uninstall: pip
+    Found existing installation: pip 24.2
+    Uninstalling pip-24.2:
+      Successfully uninstalled pip-24.2
+Successfully installed pip-25.2 setuptools-80.9.0 wheel-0.45.1
++ '[' -f web-stable-diffusion/requirements.txt ']'
++ python -m pip install -r web-stable-diffusion/requirements.txt
+Collecting accelerate (from -r web-stable-diffusion/requirements.txt (line 1))
+  Downloading accelerate-1.10.1-py3-none-any.whl.metadata (19 kB)
+Collecting diffusers (from -r web-stable-diffusion/requirements.txt (line 2))
+  Downloading diffusers-0.35.2-py3-none-any.whl.metadata (20 kB)
+Collecting transformers (from -r web-stable-diffusion/requirements.txt (line 3))
+  Downloading transformers-4.57.1-py3-none-any.whl.metadata (43 kB)
+Collecting numpy<3.0.0,>=1.17 (from accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading numpy-2.3.4-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (62 kB)
+Collecting packaging>=20.0 (from accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading packaging-25.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting psutil (from accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading psutil-7.1.0-cp36-abi3-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (23 kB)
+Collecting pyyaml (from accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading pyyaml-6.0.3-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+Collecting torch>=2.0.0 (from accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading torch-2.9.0-cp313-cp313-manylinux_2_28_x86_64.whl.metadata (30 kB)
+Collecting huggingface_hub>=0.21.0 (from accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading huggingface_hub-0.35.3-py3-none-any.whl.metadata (14 kB)
+Collecting safetensors>=0.4.3 (from accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading safetensors-0.6.2-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.1 kB)
+Collecting importlib_metadata (from diffusers->-r web-stable-diffusion/requirements.txt (line 2))
+  Downloading importlib_metadata-8.7.0-py3-none-any.whl.metadata (4.8 kB)
+Collecting filelock (from diffusers->-r web-stable-diffusion/requirements.txt (line 2))
+  Downloading filelock-3.20.0-py3-none-any.whl.metadata (2.1 kB)
+Collecting regex!=2019.12.17 (from diffusers->-r web-stable-diffusion/requirements.txt (line 2))
+  Downloading regex-2025.9.18-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (40 kB)
+Collecting requests (from diffusers->-r web-stable-diffusion/requirements.txt (line 2))
+  Downloading requests-2.32.5-py3-none-any.whl.metadata (4.9 kB)
+Collecting Pillow (from diffusers->-r web-stable-diffusion/requirements.txt (line 2))
+  Downloading pillow-12.0.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (8.8 kB)
+Collecting tokenizers<=0.23.0,>=0.22.0 (from transformers->-r web-stable-diffusion/requirements.txt (line 3))
+  Downloading tokenizers-0.22.1-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.8 kB)
+Collecting tqdm>=4.27 (from transformers->-r web-stable-diffusion/requirements.txt (line 3))
+  Downloading tqdm-4.67.1-py3-none-any.whl.metadata (57 kB)
+Collecting fsspec>=2023.5.0 (from huggingface_hub>=0.21.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading fsspec-2025.9.0-py3-none-any.whl.metadata (10 kB)
+Collecting typing-extensions>=3.7.4.3 (from huggingface_hub>=0.21.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting hf-xet<2.0.0,>=1.1.3 (from huggingface_hub>=0.21.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading hf_xet-1.1.10-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.7 kB)
+Requirement already satisfied: setuptools in /home/ubuntu/.pyenv/versions/websd-venv-3.13/lib/python3.13/site-packages (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1)) (80.9.0)
+Collecting sympy>=1.13.3 (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading sympy-1.14.0-py3-none-any.whl.metadata (12 kB)
+Collecting networkx>=2.5.1 (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading networkx-3.5-py3-none-any.whl.metadata (6.3 kB)
+Collecting jinja2 (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+Collecting nvidia-cuda-nvrtc-cu12==12.8.93 (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading nvidia_cuda_nvrtc_cu12-12.8.93-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl.metadata (1.7 kB)
+Collecting nvidia-cuda-runtime-cu12==12.8.90 (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading nvidia_cuda_runtime_cu12-12.8.90-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.7 kB)
+Collecting nvidia-cuda-cupti-cu12==12.8.90 (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading nvidia_cuda_cupti_cu12-12.8.90-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.7 kB)
+Collecting nvidia-cudnn-cu12==9.10.2.21 (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading nvidia_cudnn_cu12-9.10.2.21-py3-none-manylinux_2_27_x86_64.whl.metadata (1.8 kB)
+Collecting nvidia-cublas-cu12==12.8.4.1 (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading nvidia_cublas_cu12-12.8.4.1-py3-none-manylinux_2_27_x86_64.whl.metadata (1.7 kB)
+Collecting nvidia-cufft-cu12==11.3.3.83 (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading nvidia_cufft_cu12-11.3.3.83-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.7 kB)
+Collecting nvidia-curand-cu12==10.3.9.90 (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading nvidia_curand_cu12-10.3.9.90-py3-none-manylinux_2_27_x86_64.whl.metadata (1.7 kB)
+Collecting nvidia-cusolver-cu12==11.7.3.90 (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading nvidia_cusolver_cu12-11.7.3.90-py3-none-manylinux_2_27_x86_64.whl.metadata (1.8 kB)
+Collecting nvidia-cusparse-cu12==12.5.8.93 (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading nvidia_cusparse_cu12-12.5.8.93-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.8 kB)
+Collecting nvidia-cusparselt-cu12==0.7.1 (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading nvidia_cusparselt_cu12-0.7.1-py3-none-manylinux2014_x86_64.whl.metadata (7.0 kB)
+Collecting nvidia-nccl-cu12==2.27.5 (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading nvidia_nccl_cu12-2.27.5-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.0 kB)
+Collecting nvidia-nvshmem-cu12==3.3.20 (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading nvidia_nvshmem_cu12-3.3.20-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.1 kB)
+Collecting nvidia-nvtx-cu12==12.8.90 (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading nvidia_nvtx_cu12-12.8.90-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.8 kB)
+Collecting nvidia-nvjitlink-cu12==12.8.93 (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading nvidia_nvjitlink_cu12-12.8.93-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl.metadata (1.7 kB)
+Collecting nvidia-cufile-cu12==1.13.1.3 (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading nvidia_cufile_cu12-1.13.1.3-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.7 kB)
+Collecting triton==3.5.0 (from torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading triton-3.5.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (1.7 kB)
+Collecting mpmath<1.4,>=1.1.0 (from sympy>=1.13.3->torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
+Collecting zipp>=3.20 (from importlib_metadata->diffusers->-r web-stable-diffusion/requirements.txt (line 2))
+  Downloading zipp-3.23.0-py3-none-any.whl.metadata (3.6 kB)
+Collecting MarkupSafe>=2.0 (from jinja2->torch>=2.0.0->accelerate->-r web-stable-diffusion/requirements.txt (line 1))
+  Downloading markupsafe-3.0.3-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+Collecting charset_normalizer<4,>=2 (from requests->diffusers->-r web-stable-diffusion/requirements.txt (line 2))
+  Downloading charset_normalizer-3.4.4-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (37 kB)
+Collecting idna<4,>=2.5 (from requests->diffusers->-r web-stable-diffusion/requirements.txt (line 2))
+  Downloading idna-3.11-py3-none-any.whl.metadata (8.4 kB)
+Collecting urllib3<3,>=1.21.1 (from requests->diffusers->-r web-stable-diffusion/requirements.txt (line 2))
+  Downloading urllib3-2.5.0-py3-none-any.whl.metadata (6.5 kB)
+Collecting certifi>=2017.4.17 (from requests->diffusers->-r web-stable-diffusion/requirements.txt (line 2))
+  Downloading certifi-2025.10.5-py3-none-any.whl.metadata (2.5 kB)
+Downloading accelerate-1.10.1-py3-none-any.whl (374 kB)
+Downloading numpy-2.3.4-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.6/16.6 MB 140.6 MB/s  0:00:00
+
+Downloading diffusers-0.35.2-py3-none-any.whl (4.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.1/4.1 MB 141.1 MB/s  0:00:00
+
+Downloading transformers-4.57.1-py3-none-any.whl (12.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.0/12.0 MB 134.6 MB/s  0:00:00
+
+Downloading huggingface_hub-0.35.3-py3-none-any.whl (564 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 564.3/564.3 kB 32.3 MB/s  0:00:00
+
+Downloading hf_xet-1.1.10-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 166.4 MB/s  0:00:00
+
+Downloading tokenizers-0.22.1-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.3/3.3 MB 49.4 MB/s  0:00:00
+
+Downloading fsspec-2025.9.0-py3-none-any.whl (199 kB)
+Downloading packaging-25.0-py3-none-any.whl (66 kB)
+Downloading pyyaml-6.0.3-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (801 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 801.6/801.6 kB 100.3 MB/s  0:00:00
+
+Downloading regex-2025.9.18-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (802 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 802.1/802.1 kB 103.4 MB/s  0:00:00
+
+Downloading safetensors-0.6.2-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (485 kB)
+Downloading torch-2.9.0-cp313-cp313-manylinux_2_28_x86_64.whl (899.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 899.8/899.8 MB 63.3 MB/s  0:00:10
+
+Downloading nvidia_cublas_cu12-12.8.4.1-py3-none-manylinux_2_27_x86_64.whl (594.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 594.3/594.3 MB 100.2 MB/s  0:00:06
+
+Downloading nvidia_cuda_cupti_cu12-12.8.90-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (10.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.2/10.2 MB 115.4 MB/s  0:00:00
+
+Downloading nvidia_cuda_nvrtc_cu12-12.8.93-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl (88.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 88.0/88.0 MB 161.4 MB/s  0:00:00
+
+Downloading nvidia_cuda_runtime_cu12-12.8.90-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (954 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 954.8/954.8 kB 115.9 MB/s  0:00:00
+
+Downloading nvidia_cudnn_cu12-9.10.2.21-py3-none-manylinux_2_27_x86_64.whl (706.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 706.8/706.8 MB 63.2 MB/s  0:00:07
+
+Downloading nvidia_cufft_cu12-11.3.3.83-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (193.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 193.1/193.1 MB 98.6 MB/s  0:00:01
+
+Downloading nvidia_cufile_cu12-1.13.1.3-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 110.7 MB/s  0:00:00
+
+Downloading nvidia_curand_cu12-10.3.9.90-py3-none-manylinux_2_27_x86_64.whl (63.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 63.6/63.6 MB 166.4 MB/s  0:00:00
+
+Downloading nvidia_cusolver_cu12-11.7.3.90-py3-none-manylinux_2_27_x86_64.whl (267.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 267.5/267.5 MB 88.6 MB/s  0:00:02
+
+Downloading nvidia_cusparse_cu12-12.5.8.93-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (288.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 288.2/288.2 MB 66.5 MB/s  0:00:04
+
+Downloading nvidia_cusparselt_cu12-0.7.1-py3-none-manylinux2014_x86_64.whl (287.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 287.2/287.2 MB 105.8 MB/s  0:00:02
+
+Downloading nvidia_nccl_cu12-2.27.5-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (322.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 322.3/322.3 MB 122.6 MB/s  0:00:02
+
+Downloading nvidia_nvjitlink_cu12-12.8.93-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl (39.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 39.3/39.3 MB 89.4 MB/s  0:00:00
+
+Downloading nvidia_nvshmem_cu12-3.3.20-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (124.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 124.7/124.7 MB 112.3 MB/s  0:00:01
+
+Downloading nvidia_nvtx_cu12-12.8.90-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (89 kB)
+Downloading triton-3.5.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (170.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 170.5/170.5 MB 71.0 MB/s  0:00:02
+
+Downloading networkx-3.5-py3-none-any.whl (2.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 133.4 MB/s  0:00:00
+
+Downloading sympy-1.14.0-py3-none-any.whl (6.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.3/6.3 MB 69.6 MB/s  0:00:00
+
+Downloading mpmath-1.3.0-py3-none-any.whl (536 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 536.2/536.2 kB 55.1 MB/s  0:00:00
+
+Downloading tqdm-4.67.1-py3-none-any.whl (78 kB)
+Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+Downloading filelock-3.20.0-py3-none-any.whl (16 kB)
+Downloading importlib_metadata-8.7.0-py3-none-any.whl (27 kB)
+Downloading zipp-3.23.0-py3-none-any.whl (10 kB)
+Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+Downloading markupsafe-3.0.3-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+Downloading pillow-12.0.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (7.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.0/7.0 MB 177.7 MB/s  0:00:00
+
+Downloading psutil-7.1.0-cp36-abi3-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (291 kB)
+Downloading requests-2.32.5-py3-none-any.whl (64 kB)
+Downloading charset_normalizer-3.4.4-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (153 kB)
+Downloading idna-3.11-py3-none-any.whl (71 kB)
+Downloading urllib3-2.5.0-py3-none-any.whl (129 kB)
+Downloading certifi-2025.10.5-py3-none-any.whl (163 kB)
+Installing collected packages: nvidia-cusparselt-cu12, mpmath, zipp, urllib3, typing-extensions, triton, tqdm, sympy, safetensors, regex, pyyaml, psutil, Pillow, packaging, nvidia-nvtx-cu12, nvidia-nvshmem-cu12, nvidia-nvjitlink-cu12, nvidia-nccl-cu12, nvidia-curand-cu12, nvidia-cufile-cu12, nvidia-cuda-runtime-cu12, nvidia-cuda-nvrtc-cu12, nvidia-cuda-cupti-cu12, nvidia-cublas-cu12, numpy, networkx, MarkupSafe, idna, hf-xet, fsspec, filelock, charset_normalizer, certifi, requests, nvidia-cusparse-cu12, nvidia-cufft-cu12, nvidia-cudnn-cu12, jinja2, importlib_metadata, nvidia-cusolver-cu12, huggingface_hub, torch, tokenizers, diffusers, transformers, accelerate
+
+
+Successfully installed MarkupSafe-3.0.3 Pillow-12.0.0 accelerate-1.10.1 certifi-2025.10.5 charset_normalizer-3.4.4 diffusers-0.35.2 filelock-3.20.0 fsspec-2025.9.0 hf-xet-1.1.10 huggingface_hub-0.35.3 idna-3.11 importlib_metadata-8.7.0 jinja2-3.1.6 mpmath-1.3.0 networkx-3.5 numpy-2.3.4 nvidia-cublas-cu12-12.8.4.1 nvidia-cuda-cupti-cu12-12.8.90 nvidia-cuda-nvrtc-cu12-12.8.93 nvidia-cuda-runtime-cu12-12.8.90 nvidia-cudnn-cu12-9.10.2.21 nvidia-cufft-cu12-11.3.3.83 nvidia-cufile-cu12-1.13.1.3 nvidia-curand-cu12-10.3.9.90 nvidia-cusolver-cu12-11.7.3.90 nvidia-cusparse-cu12-12.5.8.93 nvidia-cusparselt-cu12-0.7.1 nvidia-nccl-cu12-2.27.5 nvidia-nvjitlink-cu12-12.8.93 nvidia-nvshmem-cu12-3.3.20 nvidia-nvtx-cu12-12.8.90 packaging-25.0 psutil-7.1.0 pyyaml-6.0.3 regex-2025.9.18 requests-2.32.5 safetensors-0.6.2 sympy-1.14.0 tokenizers-0.22.1 torch-2.9.0 tqdm-4.67.1 transformers-4.57.1 triton-3.5.0 typing-extensions-4.15.0 urllib3-2.5.0 zipp-3.23.0
++ '[' '!' -d tvm ']'
++ git clone --recursive https://github.com/apache/tvm.git
+Cloning into 'tvm'...
+Submodule '3rdparty/OpenCL-Headers' (https://github.com/KhronosGroup/OpenCL-Headers.git) registered for path '3rdparty/OpenCL-Headers'
+Submodule '3rdparty/cnpy' (https://github.com/rogersce/cnpy.git) registered for path '3rdparty/cnpy'
+Submodule '3rdparty/cutlass' (https://github.com/NVIDIA/cutlass.git) registered for path '3rdparty/cutlass'
+Submodule '3rdparty/cutlass_fpA_intB_gemm' (https://github.com/tlc-pack/cutlass_fpA_intB_gemm) registered for path '3rdparty/cutlass_fpA_intB_gemm'
+Submodule 'dmlc-core' (https://github.com/dmlc/dmlc-core.git) registered for path '3rdparty/dmlc-core'
+Submodule '3rdparty/libflash_attn' (https://github.com/tlc-pack/libflash_attn) registered for path '3rdparty/libflash_attn'
+Submodule '3rdparty/rang' (https://github.com/agauniyal/rang.git) registered for path '3rdparty/rang'
+Submodule '3rdparty/tvm-ffi' (https://github.com/apache/tvm-ffi) registered for path '3rdparty/tvm-ffi'
+Submodule '3rdparty/zlib' (https://github.com/madler/zlib.git) registered for path '3rdparty/zlib'
+Cloning into '/workspace/tvm/3rdparty/OpenCL-Headers'...
+Cloning into '/workspace/tvm/3rdparty/cnpy'...
+Cloning into '/workspace/tvm/3rdparty/cutlass'...
+Cloning into '/workspace/tvm/3rdparty/cutlass_fpA_intB_gemm'...
+Cloning into '/workspace/tvm/3rdparty/dmlc-core'...
+Cloning into '/workspace/tvm/3rdparty/libflash_attn'...
+Cloning into '/workspace/tvm/3rdparty/rang'...
+Cloning into '/workspace/tvm/3rdparty/tvm-ffi'...
+Cloning into '/workspace/tvm/3rdparty/zlib'...
+Submodule path '3rdparty/OpenCL-Headers': checked out 'b590a6bfe034ea3a418b7b523e3490956bcb367a'
+Submodule path '3rdparty/cnpy': checked out '4e8810b1a8637695171ed346ce68f6984e585ef4'
+Submodule path '3rdparty/cutlass': checked out 'b2dd65dc864e09688245b316ac46c4a6cd07e15c'
+Submodule path '3rdparty/cutlass_fpA_intB_gemm': checked out '72b9883c986a2ff427ca61ac0b14ad59be1dc862'
+Submodule 'cutlass' (https://github.com/NVIDIA/cutlass) registered for path '3rdparty/cutlass_fpA_intB_gemm/cutlass'
+Cloning into '/workspace/tvm/3rdparty/cutlass_fpA_intB_gemm/cutlass'...
+Submodule path '3rdparty/cutlass_fpA_intB_gemm/cutlass': checked out 'cc85b64cf676c45f98a17e3a47c0aafcf817f088'
+Submodule path '3rdparty/dmlc-core': checked out '3031e4a61a98f49f07a42cfdec6242340fb2fd8c'
+Submodule path '3rdparty/libflash_attn': checked out '07ba35bae96900e51b4d63ef3487ba24850da870'
+Submodule 'cutlass' (https://github.com/NVIDIA/cutlass/) registered for path '3rdparty/libflash_attn/cutlass'
+Cloning into '/workspace/tvm/3rdparty/libflash_attn/cutlass'...
+Submodule path '3rdparty/libflash_attn/cutlass': checked out 'e0aaa3c3b38db9a89c31f04fef91e92123ad5e2e'
+Submodule path '3rdparty/rang': checked out 'cabe04d6d6b05356fa8f9741704924788f0dd762'
+Submodule path '3rdparty/tvm-ffi': checked out '59c91c17eb7ef4f24cf00faedc82f1a8e0fc53a3'
+Submodule '3rdparty/dlpack' (https://github.com/dmlc/dlpack) registered for path '3rdparty/tvm-ffi/3rdparty/dlpack'
+Submodule '3rdparty/libbacktrace' (https://github.com/ianlancetaylor/libbacktrace) registered for path '3rdparty/tvm-ffi/3rdparty/libbacktrace'
+Cloning into '/workspace/tvm/3rdparty/tvm-ffi/3rdparty/dlpack'...
+Cloning into '/workspace/tvm/3rdparty/tvm-ffi/3rdparty/libbacktrace'...
+Submodule path '3rdparty/tvm-ffi/3rdparty/dlpack': checked out '93c8f2a3c774b84af6f652b1992c48164fae60fc'
+Submodule path '3rdparty/tvm-ffi/3rdparty/libbacktrace': checked out '793921876c981ce49759114d7bb89bb89b2d3a2d'
+Submodule path '3rdparty/zlib': checked out 'ef24c4c7502169f016dcd2a26923dbaf3216748c'
++ pushd tvm
++ git fetch --all --tags
++ git checkout v0.21.0
+warning: unable to rmdir '3rdparty/tvm-ffi': Directory not empty
+Note: switching to 'v0.21.0'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+HEAD is now at 68bb125de [release] Update version to 0.21.0 on main branch
+M	3rdparty/cutlass
+M	3rdparty/cutlass_fpA_intB_gemm
++ mkdir -p build
++ cd build
+++ which llvm-config
++ cmake -S .. -B . -G Ninja -DUSE_LLVM=ON -DLLVM_CONFIG_EXECUTABLE=/usr/bin/llvm-config -DUSE_RPC=OFF -DUSE_CUDA=OFF -DUSE_METAL=OFF -DUSE_WEBGPU=ON -DUSE_EMSCRIPTEN=ON -DCMAKE_BUILD_TYPE=Release
+CMake Error: CMake was unable to find a build program corresponding to "Ninja".  CMAKE_MAKE_PROGRAM is not set.  You probably need to select a different build tool.
+CMake Error: CMAKE_C_COMPILER not set, after EnableLanguage
+CMake Error: CMAKE_CXX_COMPILER not set, after EnableLanguage
+-- Configuring incomplete, errors occurred!

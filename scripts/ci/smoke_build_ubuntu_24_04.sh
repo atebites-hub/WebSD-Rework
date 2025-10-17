@@ -111,9 +111,9 @@ else
 fi
 
 # Upgrade pip and install Python deps if present
-python -m pip install --upgrade pip setuptools wheel
+"$PYTHON_BIN" -m pip install --upgrade pip setuptools wheel || true
 if [ -f web-stable-diffusion/requirements.txt ]; then
-  python -m pip install -r web-stable-diffusion/requirements.txt || true
+  "$PYTHON_BIN" -m pip install -r web-stable-diffusion/requirements.txt || true
 fi
 
 # Clone and optionally build Apache TVM v0.21
@@ -124,6 +124,28 @@ pushd tvm >/dev/null
 git fetch --all --tags
 git checkout v0.21.0
 mkdir -p build && cd build
+
+# Ensure basic build tools are available
+if ! command -v ninja >/dev/null 2>&1; then
+  if command -v sudo >/dev/null 2>&1 && sudo -n true 2>/dev/null; then
+    sudo apt update || true
+    sudo apt install -y ninja-build || true
+  else
+    echo "Warning: 'ninja' not found and sudo unavailable. CMake configure may fail."
+  fi
+fi
+
+# Prefer available C/C++ compilers
+if command -v gcc >/dev/null 2>&1 && command -v g++ >/dev/null 2>&1; then
+  export CC=$(which gcc)
+  export CXX=$(which g++)
+elif command -v clang >/dev/null 2>&1 && command -v clang++ >/dev/null 2>&1; then
+  export CC=$(which clang)
+  export CXX=$(which clang++)
+fi
+
+# Run CMake configure; retry once if initial configure fails (commonly due to missing ninja)
+CONFIG_OK=0
 cmake -S .. -B . -G Ninja \
   -DUSE_LLVM=ON \
   -DLLVM_CONFIG_EXECUTABLE=$(which llvm-config || echo /usr/bin/llvm-config-16) \
@@ -132,7 +154,23 @@ cmake -S .. -B . -G Ninja \
   -DUSE_METAL=OFF \
   -DUSE_WEBGPU=ON \
   -DUSE_EMSCRIPTEN=ON \
-  -DCMAKE_BUILD_TYPE=Release
+  -DCMAKE_BUILD_TYPE=Release || CONFIG_OK=1
+if [ "$CONFIG_OK" -ne 0 ]; then
+  echo "CMake configure failed; attempting to ensure ninja is installed and retry once."
+  if command -v sudo >/dev/null 2>&1 && sudo -n true 2>/dev/null; then
+    sudo apt install -y ninja-build || true
+  fi
+  cmake -S .. -B . -G Ninja \
+    -DUSE_LLVM=ON \
+    -DLLVM_CONFIG_EXECUTABLE=$(which llvm-config || echo /usr/bin/llvm-config-16) \
+    -DUSE_RPC=OFF \
+    -DUSE_CUDA=OFF \
+    -DUSE_METAL=OFF \
+    -DUSE_WEBGPU=ON \
+    -DUSE_EMSCRIPTEN=ON \
+    -DCMAKE_BUILD_TYPE=Release || true
+fi
+
 # Building TVM from source can be very long; allow skipping with FORCE_TVM_BUILD=1 environment variable.
 if [ "${FORCE_TVM_BUILD:-0}" -eq 1 ]; then
   cmake --build . -j"$(nproc)" || true
