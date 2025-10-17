@@ -41,3 +41,26 @@ Automated fixes applied to the repo
 - Guard pyenv installer when `$HOME/.pyenv` already exists
 
 If you want, I can re-run the script with `FORCE_PYENV_INSTALL=1` and `FORCE_TVM_BUILD=1` in a controlled environment (requires sudo and long runtime).
+
+---
+
+Full-build attempt (macOS, 2025-10-17):
+
+- Action: Deleted the incorrect `tvm` directory, cloned Apache TVM into `web-stable-diffusion/3rdparty/tvm` at tag `v0.21.0` (detached HEAD), created a Python `.venv` using pyenv-installed Python 3.13, and re-ran the smoke script with `FORCE_PYENV_INSTALL=1` and `FORCE_TVM_BUILD=1`.
+- What succeeded:
+  - Homebrew installed/updated required packages; `emsdk` was installed/activated and Node was available.
+  - A `.venv` was created using Python 3.13 and `web-stable-diffusion/requirements.txt` was installed into the venv.
+  - Apache TVM repository and submodules were cloned into `web-stable-diffusion/3rdparty/tvm` and checked out in a detached HEAD at `v0.21.0`.
+- Observed failures and root causes:
+  - CMake configure for TVM failed on macOS because CMake could not locate LLVM's CMake config (`LLVMConfig.cmake` / `llvm-config.cmake`). The TVM python editable install failed because the native TVM libraries (`libtvm.dylib`, `libtvm_runtime.dylib`, and other third-party dylibs) were not built and therefore pip could not complete the editable install.
+  - As a result, running `web-stable-diffusion/build.py` and `deploy.py` failed with `ModuleNotFoundError: No module named 'tvm'`.
+  - The site build step also failed due to a missing `web/local-config.json` (non-fatal to the core build but worth noting).
+- Logs and artifacts:
+  - Full run logs captured at `logs/websd_build/` in the workspace. See the timestamped log for the full console output.
+- Recommended remediation to complete the full build on macOS:
+  1. Install Homebrew LLVM and ensure CMake can find it. Example:
+     - `brew install llvm` and then either `export PATH="/opt/homebrew/opt/llvm/bin:$PATH"` or set `-DLLVM_CONFIG_EXECUTABLE=/opt/homebrew/opt/llvm/bin/llvm-config` when running the script.
+  2. Re-run the smoke script with `FORCE_TVM_BUILD=1` so `cmake --build .` runs and produces `libtvm*.dylib`. The build can be long (many minutes to hours) depending on machine resources.
+  3. After the native TVM build completes, re-run `pip install -e tvm/python` (the script attempts this automatically) and then re-run `web-stable-diffusion/build.py`.
+
+If you want I can apply the LLVM PATH fix and continue the TVM build here (note: it may take a long time). Otherwise I can provide the exact commands for you to run locally.
