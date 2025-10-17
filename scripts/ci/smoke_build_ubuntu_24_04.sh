@@ -201,7 +201,13 @@ if [ ! -d tvm ]; then
 fi
 pushd tvm >/dev/null
 git fetch --all --tags
-git checkout v0.21.0
+# Ensure a detached checkout so local branches don't cause CMake cache conflicts
+git checkout --detach v0.21.0 || git checkout --detach tags/v0.21.0 || true
+# Remove any stale build directory to avoid CMakeCache path mismatches
+if [ -d build ]; then
+  echo "Removing stale tvm/build to avoid CMakeCache mismatches"
+  rm -rf build || true
+fi
 mkdir -p build && cd build
 
 # Ensure basic build tools are available
