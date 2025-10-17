@@ -15,7 +15,28 @@ exec > >(tee -a "$LOG_DIR/$(date +%Y%m%d_%H%M%S)_smoke_build.log") 2>&1
 echo "Starting Web Stable Diffusion smoke build"
 
 # Update system and install base packages (skip if sudo not available)
-if command -v sudo >/dev/null 2>&1 && sudo -n true 2>/dev/null; then
+# Provide a macOS (Darwin) fallback using Homebrew or nvm when available.
+OS_NAME=$(uname)
+
+# Prefer a brewed llvm-config on macOS if available so CMake can find LLVM
+if [ "$OS_NAME" = "Darwin" ]; then
+  if command -v brew >/dev/null 2>&1 && [ -d "$(brew --prefix llvm 2>/dev/null)" ]; then
+    LLVM_CONFIG_EXECUTABLE="$(brew --prefix llvm)/bin/llvm-config"
+  else
+    LLVM_CONFIG_EXECUTABLE="$(which llvm-config 2>/dev/null || echo /opt/homebrew/opt/llvm/bin/llvm-config)"
+  fi
+else
+  LLVM_CONFIG_EXECUTABLE="$(which llvm-config || echo /usr/bin/llvm-config-16)"
+fi
+if [ "$OS_NAME" = "Darwin" ]; then
+  echo "Detected macOS; attempting Homebrew-based package installs where possible"
+  if command -v brew >/dev/null 2>&1; then
+    brew update || true
+    brew install git cmake ninja pkg-config python@3 curl wget unzip openssl bzip2 readline sqlite3 xz zlib libffi || true
+  else
+    echo "Homebrew not found. For macOS please install Homebrew or ensure required packages are present."
+  fi
+elif command -v sudo >/dev/null 2>&1 && sudo -n true 2>/dev/null; then
   sudo apt update && sudo apt upgrade -y
   # Try installing LLVM-16 packages; if they are unavailable add the official LLVM apt repo and retry,
   # otherwise fall back to installing the distro-provided llvm/clang packages.
@@ -44,13 +65,33 @@ else
 fi
 
 # Install Python build dependencies required by pyenv builds (non-fatal)
-if command -v sudo >/dev/null 2>&1 && sudo -n true 2>/dev/null; then
+if [ "$OS_NAME" = "Darwin" ]; then
+  if command -v brew >/dev/null 2>&1; then
+    brew install bzip2 openssl readline sqlite3 xz zlib tcl-tk || true
+  else
+    echo "Homebrew not found; pyenv build deps may be missing on macOS."
+  fi
+elif command -v sudo >/dev/null 2>&1 && sudo -n true 2>/dev/null; then
   sudo apt install -y libbz2-dev libssl-dev libreadline-dev libsqlite3-dev zlib1g-dev libffi-dev liblzma-dev libncursesw5-dev tk-dev || true
 fi
 
 # Install Node.js 18+
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-sudo apt install -y nodejs
+if [ "$OS_NAME" = "Darwin" ]; then
+  echo "Installing Node.js (macOS path)"
+  if command -v brew >/dev/null 2>&1; then
+    brew install node || true
+  else
+    echo "Homebrew not found; attempting nvm install"
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash || true
+    export NVM_DIR="$HOME/.nvm"
+    # shellcheck source=/dev/null
+    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+    nvm install 18 || true
+  fi
+else
+  curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+  sudo apt install -y nodejs
+fi
 
 # Install Emscripten SDK (emsdk)
 if [ ! -d "$HOME/emsdk" ]; then
@@ -127,7 +168,13 @@ mkdir -p build && cd build
 
 # Ensure basic build tools are available
 if ! command -v ninja >/dev/null 2>&1; then
-  if command -v sudo >/dev/null 2>&1 && sudo -n true 2>/dev/null; then
+  if [ "$OS_NAME" = "Darwin" ]; then
+    if command -v brew >/dev/null 2>&1; then
+      brew install ninja || true
+    else
+      echo "Warning: 'ninja' not found and Homebrew unavailable. CMake configure may fail."
+    fi
+  elif command -v sudo >/dev/null 2>&1 && sudo -n true 2>/dev/null; then
     sudo apt update || true
     sudo apt install -y ninja-build || true
   else
